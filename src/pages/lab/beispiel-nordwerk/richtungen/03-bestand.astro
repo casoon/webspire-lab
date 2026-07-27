@@ -1,0 +1,152 @@
+---
+import Bare from '../../../../layouts/Bare.astro';
+
+/**
+ * Richtung 03: Bestand.
+ *
+ * Getönter Grund statt Weiß, Serifen-Überschriften, asymmetrischer Split mit
+ * stehender Bildfläche. Der Ablauf steht als Zeilenwerk mit Trennlinien, nicht
+ * als Kachelraster. Mittlere Dichte zwischen 01 und 02.
+ *
+ * Konvention: die Richtung überschreibt Schicht-1-Tokens in :root. Neue
+ * Variablennamen werden nicht erfunden. Was die Achsen steuern, steht in `axes`.
+ */
+---
+
+<Bare
+  title="Nordwerk Fensterbau, Richtung 03: Bestand"
+  axes={{
+    heading: 'serif',
+    width: 'wide',
+    density: 'balanced',
+    accent: 'quiet',
+    corner: 'round',
+    motion: 'expressive',
+  }}
+>
+  <style is:global>
+    :root {
+      --ds-bg: oklch(88% 0.021 152);
+      --ds-surface: oklch(93.5% 0.015 152);
+      --ds-sunken: oklch(83% 0.026 152);
+      --ds-text: oklch(24% 0.032 160);
+      --ds-muted: oklch(36% 0.026 160);
+      --ds-line: oklch(76% 0.03 152);
+
+      --ds-accent-h: 158;
+      --ds-accent-l: 34%;
+      --ds-accent-c-base: 0.1;
+      --ds-accent-ink: oklch(97% 0.01 152);
+
+      --ds-font-serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, ui-serif, serif;
+      --ds-font-body: ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif;
+
+      --ds-text-h1: clamp(2.3rem, 1.8rem + 2.3vw, 3.6rem);
+      --ds-text-h2: clamp(1.6rem, 1.35rem + 1.1vw, 2.25rem);
+      --ds-text-h3: 1.25rem;
+      --ds-text-lead: clamp(1.1rem, 1.03rem + 0.32vw, 1.3rem);
+      --ds-weight-head: 600;
+      --ds-weight-body: 400;
+    }
+  </style>
+
+  <header class="container-ds flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-6">
+    <p class="text-small">Nordwerk Fensterbau</p>
+    <p class="text-micro text-muted">Tischlerei-Meisterbetrieb, Oldenburg</p>
+  </header>
+
+  <main>
+    <section class="container-ds grid items-end gap-x-12 gap-y-8 pb-16 lg:grid-cols-[7fr_5fr]">
+      <div>
+        <h1 class="font-head text-h1">Altbaufenster instand setzen statt austauschen</h1>
+        <p class="measure mt-6 text-lead">
+          Nordwerk Fensterbau ist ein Tischlerei-Meisterbetrieb in Oldenburg. Wir arbeiten
+          Kastendoppelfenster, Sprossenfenster und Haustüren aus Kiefer, Eiche und Lärche auf. Vor
+          jedem Angebot steht ein Aufmaß vor Ort.
+        </p>
+        <p class="mt-8 flex flex-wrap items-center gap-4">
+          <a
+            href="#aufmass"
+            class="rounded-ds-lg bg-accent px-6 py-3 text-accent-ink transition-transform duration-(--ds-dur-base) ease-ds hover:translate-y-[calc(var(--ds-shift)/-4)]"
+          >
+            Aufmaß-Termin anfragen
+          </a>
+          <a
+            href="tel:+494412098444"
+            class="rounded-ds-lg bg-surface px-6 py-3 transition-colors duration-(--ds-dur-base) ease-ds hover:bg-sunken"
+          >
+            Rückruf: 0441 20984 44
+          </a>
+        </p>
+      </div>
+
+      <div
+        aria-hidden="true"
+        class="grid aspect-[4/5] place-items-center rounded-ds-lg bg-sunken px-6 text-center text-small text-muted"
+      >
+        Bildfläche: Kastendoppelfenster von innen, Flügel geöffnet, Werkstattaufnahme
+      </div>
+    </section>
+
+    <section id="aufmass" class="bg-surface">
+      <div class="container-ds grid gap-x-12 gap-y-8 section-y lg:grid-cols-[4fr_8fr]">
+        <div>
+          <h2 class="font-head text-h2">Was beim Aufmaß vor Ort passiert</h2>
+          <p class="mt-4 text-muted">
+            Der Termin dauert je nach Anzahl der Fenster 45 bis 90 Minuten. Wir bringen Zollstock,
+            Stechbeitel und Feuchtemessgerät mit und öffnen einen Flügel exemplarisch.
+          </p>
+          <div
+            aria-hidden="true"
+            class="mt-8 grid aspect-[3/2] place-items-center rounded-ds-lg bg-sunken px-6 text-center text-small text-muted"
+          >
+            Bildfläche: Detailaufnahme Fensterbeschlag, dokumentarisch
+          </div>
+        </div>
+
+        <ol>
+          <li class="grid gap-x-8 gap-y-1 border-b border-line py-5 md:grid-cols-[13rem_1fr]">
+            <h3 class="font-head text-h3">Rahmen prüfen</h3>
+            <p class="measure text-muted">
+              Wir stechen an Wetterschenkel und unterem Rahmenholz in die Oberfläche. Weiches Holz
+              wird markiert und später als Anschäftung in Lärche ersetzt.
+            </p>
+          </li>
+          <li class="grid gap-x-8 gap-y-1 border-b border-line py-5 md:grid-cols-[13rem_1fr]">
+            <h3 class="font-head text-h3">Falzluft und Dichtung messen</h3>
+            <p class="measure text-muted">
+              Wir messen den Spalt zwischen Flügel und Blendrahmen an vier Punkten. Ab 4 mm fräsen
+              wir eine Nut und legen eine Silikondichtung ein.
+            </p>
+          </li>
+          <li class="grid gap-x-8 gap-y-1 border-b border-line py-5 md:grid-cols-[13rem_1fr]">
+            <h3 class="font-head text-h3">Beschläge aufnehmen</h3>
+            <p class="measure text-muted">
+              Bänder, Oliven und Vorreiber werden fotografiert und notiert. Vorhandene
+              Messingbeschläge arbeiten wir auf, fehlende Teile ziehen wir als Nachguss nach.
+            </p>
+          </li>
+          <li class="grid gap-x-8 gap-y-1 py-5 md:grid-cols-[13rem_1fr]">
+            <h3 class="font-head text-h3">Glas und Kitt</h3>
+            <p class="measure text-muted">
+              Wir prüfen, ob altes Zylinderglas erhalten ist und ob der Leinölkitt noch trägt.
+              Innenflügel bekommen auf Wunsch eine 12 mm starke Isolierverglasung.
+            </p>
+          </li>
+        </ol>
+
+        <p class="measure text-lead lg:col-start-2">
+          Nach dem Termin bekommen Sie ein Aufmaßprotokoll mit Fotos und ein Angebot je Fenster.
+          Für Hausverwaltungen fassen wir die Positionen nach Wohneinheit zusammen.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container-ds py-8">
+    <p class="measure text-micro text-muted">
+      Nordwerk Fensterbau, Tischlerei-Meisterbetrieb, Oldenburg. Aufmaß im Umkreis von 60 km,
+      Montag bis Freitag.
+    </p>
+  </footer>
+</Bare>

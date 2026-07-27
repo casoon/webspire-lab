@@ -1,0 +1,110 @@
+---
+/**
+ * Der Vergleich ist der eigentliche Trick am ganzen Verfahren.
+ * Ein Entwurf allein wirkt fast immer besser als er ist — nebeneinander
+ * bricht das sofort zusammen. Deshalb nie einzeln bewerten.
+ */
+interface Item {
+  href: string;
+  label: string;
+  /** Ein Satz: worin sich diese Variante von den anderen unterscheidet. */
+  note?: string;
+}
+
+interface Props {
+  items: Item[];
+  /** Höhe des gerenderten Ausschnitts in px, bevor skaliert wird. */
+  frameHeight?: number;
+}
+
+const { items, frameHeight = 1400 } = Astro.props;
+
+const viewports = [
+  { id: 'mobile', label: 'Mobil 390', width: 390, scale: 0.8 },
+  { id: 'tablet', label: 'Tablet 834', width: 834, scale: 0.5 },
+  { id: 'desktop', label: 'Desktop 1440', width: 1440, scale: 0.34 },
+];
+const initial = viewports[2];
+---
+
+<div
+  class="compare"
+  data-compare
+  style={`--frame-w:${initial.width}px; --frame-h:${frameHeight}px; --frame-scale:${initial.scale};`}
+>
+  <fieldset class="flex flex-wrap items-center gap-3 border border-line rounded-ds px-4 py-3">
+    <legend class="px-1 text-micro text-muted uppercase tracking-wide">Viewport</legend>
+    {
+      viewports.map((vp) => (
+        <label class="flex items-center gap-1.5">
+          <input
+            type="radio"
+            name="compare-viewport"
+            value={vp.id}
+            data-width={vp.width}
+            data-scale={vp.scale}
+            checked={vp.id === initial.id}
+          />
+          <span>{vp.label}</span>
+        </label>
+      ))
+    }
+  </fieldset>
+
+  <ol class="mt-6 flex gap-6 overflow-x-auto pb-4">
+    {
+      items.map((item, i) => (
+        <li class="shrink-0">
+          <div class="flex items-baseline justify-between gap-4 pb-2" style="width: calc(var(--frame-w) * var(--frame-scale))">
+            <h2 class="font-head text-h3">
+              <span class="text-muted tabular-nums">{String(i + 1).padStart(2, '0')}</span> {item.label}
+            </h2>
+            <a href={item.href} class="text-micro text-muted underline underline-offset-4 hover:text-ink">
+              einzeln
+            </a>
+          </div>
+          {item.note && (
+            <p class="pb-3 text-micro text-muted" style="width: calc(var(--frame-w) * var(--frame-scale))">
+              {item.note}
+            </p>
+          )}
+          <div class="compare__viewport border border-line bg-surface">
+            <iframe
+              src={item.href}
+              title={`Vorschau: ${item.label}`}
+              loading={i < 3 ? 'eager' : 'lazy'}
+              class="compare__frame"
+            />
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<style>
+  .compare__viewport {
+    width: calc(var(--frame-w) * var(--frame-scale));
+    height: calc(var(--frame-h) * var(--frame-scale));
+    overflow: hidden;
+  }
+
+  .compare__frame {
+    width: var(--frame-w);
+    height: var(--frame-h);
+    border: 0;
+    transform: scale(var(--frame-scale));
+    transform-origin: top left;
+  }
+</style>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('[data-compare]')) {
+    root.addEventListener('change', (event) => {
+      const input = event.target;
+      if (!(input instanceof HTMLInputElement) || input.name !== 'compare-viewport') return;
+      root.style.setProperty('--frame-w', `${input.dataset.width}px`);
+      root.style.setProperty('--frame-scale', String(input.dataset.scale));
+    });
+  }
+</script>

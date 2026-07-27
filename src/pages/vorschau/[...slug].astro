@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
+import Bare from '../../layouts/Bare.astro';
+
+// Glob-Muster muss ein Literal sein — keine Variablen, keine Template-Strings.
+// Absolute Form ab Projekt-Root, damit die Keys nicht an der Dateitiefe hängen.
+const previews = import.meta.glob<{ default: AstroComponentFactory }>(
+  '/src/catalog/**/Preview.astro',
+  {
+    eager: true,
+  }
+);
+
+export async function getStaticPaths() {
+  const entries = await getCollection('catalog', ({ data }) => !data.draft);
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const key = `/src/catalog/${entry.id}/Preview.astro`;
+const Preview = previews[key]?.default;
+---
+
+<Bare title={`Vorschau: ${entry.data.title}`} axes={entry.data.axes}>
+  {/*
+    Der Baustein selbst beginnt bei h2 — er ist ein Fragment und weiß nicht,
+    in welcher Seite er später landet. Als eigenständiges Dokument braucht die
+    Vorschau trotzdem einen h1, sonst ist sie strukturell kaputt.
+  */}
+  <h1 class="sr-only">{entry.data.title}</h1>
+  {
+    Preview ? (
+      <Preview />
+    ) : (
+      <p style="padding:2rem;font-family:var(--ds-font-mono)">
+        Keine Vorschau gefunden: <code>{key}</code>
+      </p>
+    )
+  }
+</Bare>

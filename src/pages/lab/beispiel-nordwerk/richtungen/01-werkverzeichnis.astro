@@ -1,0 +1,162 @@
+---
+import Bare from '../../../../layouts/Bare.astro';
+
+/**
+ * Richtung 01: Werkverzeichnis.
+ *
+ * Dichtes Register. Die Seite gibt sich als Arbeitsunterlage aus: kleine Grade,
+ * Mono-Überschriften, gefüllte Kacheln statt Rahmen, kühles Hellgrau-Blau.
+ * Bewegung ist abgeschaltet, damit im Vergleich sichtbar wird, ob sie fehlt.
+ *
+ * Konvention: die Richtung überschreibt Schicht-1-Tokens in :root. Neue
+ * Variablennamen werden nicht erfunden. Alles, was die Achsen ohnehin steuern
+ * (Breite, Dichte, Radius, Dauer, Überschriftenfamilie), steht in `axes` und
+ * nicht im Stylesheet, damit die Achsenleiste im Vergleich greift.
+ */
+---
+
+<Bare
+  title="Nordwerk Fensterbau, Richtung 01: Werkverzeichnis"
+  axes={{
+    heading: 'mono',
+    width: 'wide',
+    density: 'tight',
+    accent: 'normal',
+    corner: 'soft',
+    motion: 'none',
+  }}
+>
+  <style is:global>
+    :root {
+      --ds-bg: oklch(95% 0.006 240);
+      --ds-surface: oklch(99% 0.002 240);
+      --ds-sunken: oklch(90.5% 0.01 240);
+      --ds-text: oklch(25% 0.018 250);
+      --ds-muted: oklch(42% 0.016 250);
+      --ds-line: oklch(84% 0.012 240);
+
+      --ds-accent-h: 235;
+      --ds-accent-l: 40%;
+      --ds-accent-c-base: 0.13;
+      --ds-accent-ink: oklch(99% 0 0);
+
+      --ds-font-body: ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif;
+      --ds-font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+      --ds-text-h1: clamp(1.75rem, 1.45rem + 1.3vw, 2.5rem);
+      --ds-text-h2: clamp(1.3rem, 1.15rem + 0.6vw, 1.65rem);
+      --ds-text-h3: 1.0625rem;
+      --ds-text-lead: 1.0625rem;
+      --ds-text-body: 0.9375rem;
+      --ds-text-small: 0.8125rem;
+      --ds-text-micro: 0.75rem;
+      --ds-leading-head: 1.2;
+    }
+  </style>
+
+  <header class="border-b border-line bg-surface">
+    <div class="container-ds flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-3">
+      <p class="font-mono text-small">Nordwerk Fensterbau</p>
+      <p class="text-micro text-muted">Tischlerei-Meisterbetrieb, Oldenburg</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="container-ds grid items-start gap-x-10 gap-y-8 py-10 lg:grid-cols-[1.1fr_0.9fr]">
+      <div>
+        <h1 class="font-head text-h1">Altbaufenster instand setzen statt austauschen</h1>
+        <p class="measure mt-4 text-lead">
+          Nordwerk Fensterbau ist ein Tischlerei-Meisterbetrieb in Oldenburg. Wir arbeiten
+          Kastendoppelfenster, Sprossenfenster und Haustüren aus Kiefer, Eiche und Lärche auf.
+          Vor jedem Angebot steht ein Aufmaß vor Ort.
+        </p>
+        <p class="mt-6 flex flex-wrap items-center gap-3">
+          <a
+            href="#aufmass"
+            class="rounded-ds bg-accent px-5 py-2.5 font-mono text-small text-accent-ink"
+          >
+            Aufmaß-Termin anfragen
+          </a>
+          <a
+            href="tel:+494412098444"
+            class="rounded-ds bg-sunken px-5 py-2.5 font-mono text-small"
+          >
+            Rückruf: 0441 20984 44
+          </a>
+        </p>
+      </div>
+
+      <div
+        aria-hidden="true"
+        class="grid aspect-[5/3] place-items-center rounded-ds bg-sunken px-6 text-center text-micro text-muted"
+      >
+        Bildfläche: Kastendoppelfenster von innen, Flügel geöffnet, Werkstattaufnahme
+      </div>
+    </section>
+
+    <section id="aufmass" class="border-t border-line bg-surface">
+      <div class="container-ds grid gap-x-10 gap-y-6 py-10 lg:grid-cols-[0.9fr_1.1fr]">
+        <div>
+          <h2 class="font-head text-h2">Was beim Aufmaß vor Ort passiert</h2>
+          <p class="measure mt-3 text-muted">
+            Der Termin dauert je nach Anzahl der Fenster 45 bis 90 Minuten. Wir bringen Zollstock,
+            Stechbeitel und Feuchtemessgerät mit und öffnen einen Flügel exemplarisch.
+          </p>
+          <div
+            aria-hidden="true"
+            class="mt-6 grid aspect-[3/1] place-items-center rounded-ds bg-sunken px-6 text-center text-micro text-muted"
+          >
+            Bildfläche: Detailaufnahme Fensterbeschlag, dokumentarisch
+          </div>
+        </div>
+
+        <ol class="grid gap-3 sm:grid-cols-2">
+          <li class="rounded-ds bg-sunken p-4">
+            <h3 class="font-head text-h3">Rahmen prüfen</h3>
+            <p class="mt-1.5 text-small text-muted">
+              Wir stechen an Wetterschenkel und unterem Rahmenholz in die Oberfläche. Weiches Holz
+              wird markiert und später als Anschäftung in Lärche ersetzt.
+            </p>
+          </li>
+          <li class="rounded-ds bg-sunken p-4">
+            <h3 class="font-head text-h3">Falzluft und Dichtung messen</h3>
+            <p class="mt-1.5 text-small text-muted">
+              Wir messen den Spalt zwischen Flügel und Blendrahmen an vier Punkten. Ab 4 mm fräsen
+              wir eine Nut und legen eine Silikondichtung ein.
+            </p>
+          </li>
+          <li class="rounded-ds bg-sunken p-4">
+            <h3 class="font-head text-h3">Beschläge aufnehmen</h3>
+            <p class="mt-1.5 text-small text-muted">
+              Bänder, Oliven und Vorreiber werden fotografiert und notiert. Vorhandene
+              Messingbeschläge arbeiten wir auf, fehlende Teile ziehen wir als Nachguss nach.
+            </p>
+          </li>
+          <li class="rounded-ds bg-sunken p-4">
+            <h3 class="font-head text-h3">Glas und Kitt</h3>
+            <p class="mt-1.5 text-small text-muted">
+              Wir prüfen, ob altes Zylinderglas erhalten ist und ob der Leinölkitt noch trägt.
+              Innenflügel bekommen auf Wunsch eine 12 mm starke Isolierverglasung.
+            </p>
+          </li>
+        </ol>
+      </div>
+
+      <div class="container-ds pb-10">
+        <p class="measure text-small text-muted">
+          Nach dem Termin bekommen Sie ein Aufmaßprotokoll mit Fotos und ein Angebot je Fenster.
+          Für Hausverwaltungen fassen wir die Positionen nach Wohneinheit zusammen.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-line">
+    <div class="container-ds py-5">
+      <p class="measure text-micro text-muted">
+        Nordwerk Fensterbau, Tischlerei-Meisterbetrieb, Oldenburg. Aufmaß im Umkreis von 60 km,
+        Montag bis Freitag.
+      </p>
+    </div>
+  </footer>
+</Bare>

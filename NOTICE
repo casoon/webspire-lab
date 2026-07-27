@@ -1,0 +1,61 @@
+@webspire/lab
+Copyright 2026 Jörn Seidel
+
+Dieses Produkt steht unter der Apache License 2.0 (siehe LICENSE).
+
+------------------------------------------------------------------------
+Mitgelieferte Skills unter .claude/skills/
+------------------------------------------------------------------------
+
+Die folgenden Skills sind eingefrorene Kopien aus casoon-agent-skills
+(MIT, Copyright 2026 Jörn Seidel). Sie liegen bewusst als Kopie im Repo,
+damit das Projekt ohne die globale Sammlung funktioniert:
+
+  accessibility-audit        landing-and-site-builder
+  anti-ai-copy               llm-council
+  astro-architecture         motion-design
+  design-directions          playwright
+  frontend-design *          tailwind-ui
+  ui-design                  web-design-workflow
+  web-performance
+
+  * frontend-design stammt aus einer fremden Quelle und bringt eigene
+    Apache-2.0-Bedingungen mit. Die zugehörige LICENSE.txt liegt
+    unverändert im Skill-Ordner. Der Text nennt keinen Rechteinhaber.
+
+Projekteigene Skills (kein Fremdcode):
+
+  design-brief               design-directions-lab
+  design-catalog-entry       inspiration-capture
+  slop-review
+
+------------------------------------------------------------------------
+Kopien pflegen
+------------------------------------------------------------------------
+
+Die Kopien driften. In diesem Repo greift immer die Kopie, nie die
+global verlinkte Version. Wer die globale Sammlung ändert, muss den
+Abgleich hier von Hand machen:
+
+  diff -r ~/.claude/skills/<name> .claude/skills/<name>
+
+Alle 18 Skills erfüllen den offenen Agent-Skills-Standard
+(https://agentskills.io/specification): `name` entspricht dem
+Ordnernamen, `description` bleibt unter 1024 Zeichen. Sie sind damit
+nicht claude-spezifisch, sondern laufen unverändert auch in Codex,
+Gemini CLI, Copilot und Cursor — nur die Ablagepfade unterscheiden
+sich (~/.claude/skills, ~/.agents/skills, ~/.gemini/skills).
+
+Wer sie über Projekte und Agenten hinweg verteilen will, braucht dafür
+nichts zu bauen: `npx skills add <owner>/<repo> -g --all` legt sie per
+Symlink in allen erkannten Agenten ab (vercel-labs/skills, MIT).
+
+Zehn Skills werden von den Kopien erwähnt, sind aber absichtlich NICHT
+mitgeliefert, weil ihr Gegenstand hier nicht vorkommt (SEO, i18n,
+Blog-Inhalte, Build-Audit, Bildkonvertierung, Kunden-Copy):
+
+  brand-voice-dna  content-clarity-a11y-check  darkmode  i18n
+  image-to-webp  landingpage-from-briefing  local-business-seo
+  mdx-content  post-audit  seo
+
+Verweise darauf sind Vertiefung, keine Voraussetzung.

@@ -1,0 +1,104 @@
+---
+import { getCollection, render } from 'astro:content';
+import Lab from '../../layouts/Lab.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('catalog', ({ data }) => !data.draft);
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const previewUrl = `/vorschau/${entry.id}/`;
+
+const axisRows = Object.entries(entry.data.axes) as [string, string][];
+---
+
+<Lab title={entry.data.title} lead={entry.data.summary}>
+  <div class="grid gap-8 lg:grid-cols-[2fr_1fr]">
+    <div>
+      <div class="border border-line rounded-ds overflow-hidden">
+        <iframe src={previewUrl} title={`Vorschau: ${entry.data.title}`} class="block w-full h-[70vh] border-0"
+        ></iframe>
+      </div>
+      <p class="mt-2 text-micro text-muted">
+        <a href={previewUrl} class="underline underline-offset-4 hover:text-ink">Vorschau einzeln öffnen</a>
+        — Tastaturbedienung nur dort sinnvoll prüfbar, nicht im eingebetteten Rahmen.
+      </p>
+
+      <div class="prose-lab mt-10">
+        <Content />
+      </div>
+    </div>
+
+    <aside>
+      <h2 class="font-head text-h3">Merkmale</h2>
+      <dl class="mt-3 space-y-2">
+        <div class="flex gap-3">
+          <dt class="w-28 shrink-0 text-micro text-muted uppercase tracking-wide">Familie</dt>
+          <dd>{entry.data.family}</dd>
+        </div>
+        <div class="flex gap-3">
+          <dt class="w-28 shrink-0 text-micro text-muted uppercase tracking-wide">Richtung</dt>
+          <dd>{entry.data.direction.join(', ')}</dd>
+        </div>
+        {
+          axisRows.map(([axis, value]) => (
+            <div class="flex gap-3">
+              <dt class="w-28 shrink-0 text-micro text-muted uppercase tracking-wide">{axis}</dt>
+              <dd>{value}</dd>
+            </div>
+          ))
+        }
+        <div class="flex gap-3">
+          <dt class="w-28 shrink-0 text-micro text-muted uppercase tracking-wide">Client-JS</dt>
+          <dd class="tabular-nums">{entry.data.jsWeight === 0 ? 'keins' : `${entry.data.jsWeight} kB`}</dd>
+        </div>
+        <div class="flex gap-3">
+          <dt class="w-28 shrink-0 text-micro text-muted uppercase tracking-wide">a11y</dt>
+          <dd>{entry.data.a11yChecked ? 'geprüft' : 'offen'}</dd>
+        </div>
+        <div class="flex gap-3">
+          <dt class="w-28 shrink-0 text-micro text-muted uppercase tracking-wide">Herkunft</dt>
+          <dd>
+            {entry.data.origin}
+            {entry.data.originNote && <span class="block text-micro text-muted">{entry.data.originNote}</span>}
+          </dd>
+        </div>
+      </dl>
+
+      <h2 class="font-head text-h3 mt-8">Quelle</h2>
+      <p class="mt-2 text-muted break-all">
+        <code>src/catalog/{entry.id}/Preview.astro</code>
+      </p>
+    </aside>
+  </div>
+</Lab>
+
+<style>
+  .prose-lab :global(h2) {
+    font-size: var(--ds-text-h2);
+    margin-block: 1.75em 0.5em;
+  }
+  .prose-lab :global(h3) {
+    font-size: var(--ds-text-h3);
+    margin-block: 1.5em 0.4em;
+  }
+  .prose-lab :global(p),
+  .prose-lab :global(ul),
+  .prose-lab :global(ol) {
+    max-width: var(--ds-measure);
+    margin-block: 0.75em;
+  }
+  .prose-lab :global(ul),
+  .prose-lab :global(ol) {
+    padding-inline-start: 1.25rem;
+    list-style: disc;
+  }
+  .prose-lab :global(pre) {
+    overflow-x: auto;
+    padding: 1rem;
+    background: var(--ds-sunken);
+    border-radius: var(--ds-radius);
+  }
+</style>

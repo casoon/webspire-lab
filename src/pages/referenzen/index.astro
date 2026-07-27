@@ -1,0 +1,120 @@
+---
+import { getCollection } from 'astro:content';
+import { CATALOG_FAMILY, DIRECTIONS } from '../../content.config';
+import Lab from '../../layouts/Lab.astro';
+
+const references = (await getCollection('references')).sort(
+  (a, b) => b.data.captured.valueOf() - a.data.captured.valueOf()
+);
+
+const byDirection = DIRECTIONS.map((direction) => ({
+  direction,
+  count: references.filter((ref) => ref.data.direction.includes(direction)).length,
+}));
+
+// Deckungslücke sichtbar machen: Bibliotheken kippen sonst zu reinen Hero-Sammlungen.
+const coverage = CATALOG_FAMILY.map((family) => ({
+  family,
+  count: references.filter((ref) => ref.data.covers.includes(family)).length,
+}));
+
+const liveShare = references.length
+  ? Math.round(
+      (references.filter((ref) => ref.data.sourceType === 'live-site').length / references.length) *
+        100
+    )
+  : 0;
+
+const sourceLabel: Record<string, string> = {
+  'live-site': 'reale Website',
+  shot: 'Shot / Konzept',
+  print: 'Print',
+  app: 'App',
+  other: 'sonstiges',
+};
+---
+
+<Lab
+  title="Referenzen"
+  lead="Die eigene Inspirationsbibliothek. Nicht „diese Seite nachbauen“, sondern „diese Eigenschaft übernehmen“ — deshalb ist das Merkmal wichtiger als das Bild."
+>
+  <div class="grid gap-4 sm:grid-cols-3">
+    <p class="border border-line rounded-ds p-4">
+      <span class="block font-head text-h1 tabular-nums">{references.length}</span>
+      <span class="text-micro text-muted uppercase tracking-wide">Referenzen</span>
+    </p>
+    <p class="border border-line rounded-ds p-4">
+      <span class="block font-head text-h1 tabular-nums">{liveShare}%</span>
+      <span class="text-micro text-muted uppercase tracking-wide">davon reale Websites</span>
+    </p>
+    <p class="border border-line rounded-ds p-4">
+      <span class="block font-head text-h1 tabular-nums">
+        {coverage.filter((entry) => entry.count > 0).length}/{CATALOG_FAMILY.length}
+      </span>
+      <span class="text-micro text-muted uppercase tracking-wide">Screen-Typen abgedeckt</span>
+    </p>
+  </div>
+
+  {
+    references.length < 15 && (
+      <p class="measure mt-6 text-muted">
+        Unter 15 Referenzen trägt die Bibliothek keine Entscheidung. Ziel für Phase 2 sind 15–30.
+      </p>
+    )
+  }
+
+  <h2 class="font-head text-h2 mt-12">Abdeckung nach Screen-Typ</h2>
+  <ul class="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
+    {
+      coverage.map((entry) => (
+        <li class={entry.count === 0 ? 'text-muted line-through' : ''}>
+          {entry.family} <span class="text-muted tabular-nums">{entry.count}</span>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2 class="font-head text-h2 mt-12">Nach Richtung</h2>
+  <ul class="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
+    {
+      byDirection.map((entry) => (
+        <li class={entry.count === 0 ? 'text-muted' : ''}>
+          {entry.direction} <span class="text-muted tabular-nums">{entry.count}</span>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2 class="font-head text-h2 mt-12">Alle Einträge</h2>
+  {
+    references.length === 0 ? (
+      <p class="measure mt-3 text-muted">
+        Noch nichts erfasst. Referenz aufnehmen mit <code>/inspiration-capture</code>.
+      </p>
+    ) : (
+      <ul class="mt-4 space-y-4">
+        {references.map((ref) => (
+          <li class="border border-line rounded-ds p-5">
+            <h3 class="font-head text-h3">
+              {ref.data.url ? (
+                <a href={ref.data.url} rel="noreferrer" class="underline-offset-4 hover:underline">
+                  {ref.data.title}
+                </a>
+              ) : (
+                ref.data.title
+              )}
+            </h3>
+            <p class="mt-1 text-micro text-muted uppercase tracking-wide">
+              {sourceLabel[ref.data.sourceType]} · {ref.data.typeVoice} · {ref.data.layout} · {ref.data.surface}
+            </p>
+            <p class="measure mt-3">{ref.data.takeaway}</p>
+            <p class="mt-2 text-micro text-muted">
+              {ref.data.direction.join(' · ')}
+              {ref.data.covers.length > 0 && <> — zeigt: {ref.data.covers.join(', ')}</>}
+            </p>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</Lab>

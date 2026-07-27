@@ -1,0 +1,154 @@
+---
+import Bare from '../../../../layouts/Bare.astro';
+
+/**
+ * Richtung 02: Aufmaß.
+ *
+ * Dunkler Grund, sehr große Grotesk, eine Spalte, kein einziger Rahmen um
+ * Inhalt. Die Seite hat pro Bildschirm genau eine Sache zu sagen, die primäre
+ * Aktion steht deshalb allein. Gegenprobe zur dichten Richtung 01.
+ *
+ * Konvention: die Richtung überschreibt Schicht-1-Tokens in :root. Neue
+ * Variablennamen werden nicht erfunden. Was die Achsen steuern, steht in `axes`.
+ */
+---
+
+<Bare
+  title="Nordwerk Fensterbau, Richtung 02: Aufmaß"
+  axes={{
+    heading: 'display',
+    width: 'normal',
+    density: 'airy',
+    accent: 'strong',
+    corner: 'square',
+    motion: 'subtle',
+  }}
+>
+  <style is:global>
+    :root {
+      color-scheme: dark;
+
+      --ds-bg: oklch(28% 0.025 250);
+      --ds-surface: oklch(33% 0.024 250);
+      --ds-sunken: oklch(24% 0.022 250);
+      --ds-text: oklch(95% 0.008 250);
+      --ds-muted: oklch(78% 0.012 250);
+      --ds-line: oklch(43% 0.02 250);
+
+      --ds-accent-h: 80;
+      --ds-accent-l: 78%;
+      --ds-accent-c-base: 0.11;
+      --ds-accent-ink: oklch(22% 0.03 80);
+
+      --ds-font-body: ui-sans-serif, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --ds-font-display: var(--ds-font-body);
+
+      --ds-text-h1: clamp(2.9rem, 2.05rem + 4.2vw, 5.5rem);
+      --ds-text-h2: clamp(1.8rem, 1.5rem + 1.3vw, 2.6rem);
+      --ds-text-h3: clamp(1.15rem, 1.08rem + 0.35vw, 1.4rem);
+      --ds-text-lead: clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
+      --ds-text-body: 1.0625rem;
+      --ds-leading-display: 1;
+      --ds-leading-head: 1.05;
+      --ds-tracking-display: -0.035em;
+      --ds-weight-head: 700;
+    }
+  </style>
+
+  <header class="container-ds flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 pt-8">
+    <p class="text-small">Nordwerk Fensterbau</p>
+    <p class="text-micro text-muted">Tischlerei-Meisterbetrieb, Oldenburg</p>
+  </header>
+
+  <main>
+    <section class="container-ds section-y">
+      <h1 class="font-head text-h1">Altbaufenster instand setzen statt austauschen</h1>
+      <p class="measure mt-10 text-lead text-muted">
+        Nordwerk Fensterbau ist ein Tischlerei-Meisterbetrieb in Oldenburg. Wir arbeiten
+        Kastendoppelfenster, Sprossenfenster und Haustüren aus Kiefer, Eiche und Lärche auf. Vor
+        jedem Angebot steht ein Aufmaß vor Ort.
+      </p>
+      <p class="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4">
+        <a
+          href="#aufmass"
+          class="bg-accent px-8 py-4 text-accent-ink transition-opacity duration-(--ds-dur-base) ease-ds hover:opacity-85"
+        >
+          Aufmaß-Termin anfragen
+        </a>
+        <a
+          href="tel:+494412098444"
+          class="underline decoration-line underline-offset-8 transition-colors duration-(--ds-dur-base) ease-ds hover:decoration-current"
+        >
+          Rückruf: 0441 20984 44
+        </a>
+      </p>
+    </section>
+
+    <div class="container-ds">
+      <div
+        aria-hidden="true"
+        class="grid aspect-[16/9] place-items-center bg-sunken px-8 text-center text-small text-muted"
+      >
+        Bildfläche: Kastendoppelfenster von innen, Flügel geöffnet, Werkstattaufnahme
+      </div>
+    </div>
+
+    <section id="aufmass" class="container-ds section-y">
+      <h2 class="font-head text-h2">Was beim Aufmaß vor Ort passiert</h2>
+      <p class="measure mt-8 text-lead text-muted">
+        Der Termin dauert je nach Anzahl der Fenster 45 bis 90 Minuten. Wir bringen Zollstock,
+        Stechbeitel und Feuchtemessgerät mit und öffnen einen Flügel exemplarisch.
+      </p>
+
+      <ol class="mt-16 space-y-14">
+        <li>
+          <h3 class="font-head text-h3">Rahmen prüfen</h3>
+          <p class="measure mt-3 text-muted">
+            Wir stechen an Wetterschenkel und unterem Rahmenholz in die Oberfläche. Weiches Holz
+            wird markiert und später als Anschäftung in Lärche ersetzt.
+          </p>
+        </li>
+        <li>
+          <h3 class="font-head text-h3">Falzluft und Dichtung messen</h3>
+          <p class="measure mt-3 text-muted">
+            Wir messen den Spalt zwischen Flügel und Blendrahmen an vier Punkten. Ab 4 mm fräsen
+            wir eine Nut und legen eine Silikondichtung ein.
+          </p>
+        </li>
+        <li>
+          <h3 class="font-head text-h3">Beschläge aufnehmen</h3>
+          <p class="measure mt-3 text-muted">
+            Bänder, Oliven und Vorreiber werden fotografiert und notiert. Vorhandene
+            Messingbeschläge arbeiten wir auf, fehlende Teile ziehen wir als Nachguss nach.
+          </p>
+        </li>
+        <li>
+          <h3 class="font-head text-h3">Glas und Kitt</h3>
+          <p class="measure mt-3 text-muted">
+            Wir prüfen, ob altes Zylinderglas erhalten ist und ob der Leinölkitt noch trägt.
+            Innenflügel bekommen auf Wunsch eine 12 mm starke Isolierverglasung.
+          </p>
+        </li>
+      </ol>
+
+      <div
+        aria-hidden="true"
+        class="mt-16 grid aspect-[21/9] place-items-center bg-sunken px-8 text-center text-small text-muted"
+      >
+        Bildfläche: Detailaufnahme Fensterbeschlag, dokumentarisch
+      </div>
+
+      <p class="measure mt-16 text-lead">
+        Nach dem Termin bekommen Sie ein Aufmaßprotokoll mit Fotos und ein Angebot je Fenster. Für
+        Hausverwaltungen fassen wir die Positionen nach Wohneinheit zusammen.
+      </p>
+    </section>
+  </main>
+
+  <footer class="container-ds pb-12">
+    <p class="measure text-micro text-muted">
+      Nordwerk Fensterbau, Tischlerei-Meisterbetrieb, Oldenburg. Aufmaß im Umkreis von 60 km,
+      Montag bis Freitag.
+    </p>
+  </footer>
+</Bare>

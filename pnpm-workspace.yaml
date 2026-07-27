@@ -1,0 +1,3 @@
+# esbuild: true — wird vom Astro-Build gebraucht.
+allowBuilds:
+  esbuild: true

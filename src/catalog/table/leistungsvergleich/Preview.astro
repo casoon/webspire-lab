@@ -1,0 +1,94 @@
+---
+/**
+ * Leistungsvergleich als Datentabelle. Statisch, kein Client-JS.
+ *
+ * Der Scroll-Container ist fokussierbar und als Region benannt. Ohne das ist
+ * eine horizontal scrollbare Tabelle mit der Tastatur nicht erreichbar, was
+ * der häufigste Fehler bei responsiven Tabellen ist.
+ *
+ * Kein Umbau zu Karten auf schmalen Viewports: sobald Spalten zu Zeilen
+ * werden, geht der Vergleich verloren, um den es in der Tabelle geht.
+ */
+---
+
+<section class="section-y">
+  <div class="container-ds">
+    <h2 class="font-head text-h2">Leistungsumfang im Vergleich</h2>
+    <p class="measure mt-3 text-muted">
+      Angaben je Prüfzyklus. Auf schmalen Bildschirmen lässt sich die Tabelle seitlich verschieben,
+      mit dem Finger oder mit den Pfeiltasten.
+    </p>
+
+    <div
+      role="region"
+      aria-label="Leistungsvergleich der Prüfpakete, seitlich scrollbar"
+      tabindex="0"
+      class="mt-8 overflow-x-auto rounded-ds border border-line"
+    >
+      <table class="min-w-full border-collapse tabular-nums">
+        <caption class="px-4 py-3 text-start text-small text-muted">
+          Leistungsvergleich der drei Prüfpakete, Stand Juli 2026. Preise in Euro, zuzüglich
+          Umsatzsteuer.
+        </caption>
+        <thead>
+          <tr class="border-y border-line bg-surface">
+            <th scope="col" class="px-4 py-3 text-start font-medium whitespace-nowrap">Leistung</th>
+            <th scope="col" class="px-4 py-3 text-end font-medium whitespace-nowrap">Basis</th>
+            <th scope="col" class="px-4 py-3 text-end font-medium whitespace-nowrap">Standard</th>
+            <th scope="col" class="px-4 py-3 text-end font-medium whitespace-nowrap">Erweitert</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row" class="px-4 py-3 text-start font-medium whitespace-nowrap">
+              Geprüfte Seiten
+            </th>
+            <td class="px-4 py-3 text-end whitespace-nowrap">5</td>
+            <td class="px-4 py-3 text-end whitespace-nowrap">25</td>
+            <td class="px-4 py-3 text-end whitespace-nowrap">100</td>
+          </tr>
+          <tr class="border-t border-line">
+            <th scope="row" class="px-4 py-3 text-start font-medium whitespace-nowrap">
+              Prüfverfahren
+            </th>
+            <td class="px-4 py-3 text-end whitespace-nowrap">automatisiert</td>
+            <td class="px-4 py-3 text-end whitespace-nowrap">automatisiert und manuell</td>
+            <td class="px-4 py-3 text-end whitespace-nowrap">automatisiert und manuell</td>
+          </tr>
+          <tr class="border-t border-line">
+            <th scope="row" class="px-4 py-3 text-start font-medium whitespace-nowrap">
+              Berichtsumfang in Seiten
+            </th>
+            <td class="px-4 py-3 text-end whitespace-nowrap">8</td>
+            <td class="px-4 py-3 text-end whitespace-nowrap">24</td>
+            <td class="px-4 py-3 text-end whitespace-nowrap">60</td>
+          </tr>
+          <tr class="border-t border-line">
+            <th scope="row" class="px-4 py-3 text-start font-medium whitespace-nowrap">
+              Nachprüfung nach Umsetzung
+            </th>
+            <td class="px-4 py-3 text-end whitespace-nowrap">nicht enthalten</td>
+            <td class="px-4 py-3 text-end whitespace-nowrap">einmal</td>
+            <td class="px-4 py-3 text-end whitespace-nowrap">zweimal</td>
+          </tr>
+          <tr class="border-t border-line">
+            <th scope="row" class="px-4 py-3 text-start font-medium whitespace-nowrap">
+              Reaktionszeit in Werktagen
+            </th>
+            <td class="px-4 py-3 text-end whitespace-nowrap">5</td>
+            <td class="px-4 py-3 text-end whitespace-nowrap">3</td>
+            <td class="px-4 py-3 text-end whitespace-nowrap">1</td>
+          </tr>
+          <tr class="border-t border-line">
+            <th scope="row" class="px-4 py-3 text-start font-medium whitespace-nowrap">
+              Preis in Euro
+            </th>
+            <td class="px-4 py-3 text-end whitespace-nowrap">450</td>
+            <td class="px-4 py-3 text-end whitespace-nowrap">1.900</td>
+            <td class="px-4 py-3 text-end whitespace-nowrap">4.800</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

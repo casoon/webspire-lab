@@ -1,0 +1,123 @@
+---
+/**
+ * Die Einstellleiste aus Phase 7 — bewusst Auswahl statt Schieberegler.
+ *
+ * Freie Pixelwerte erzeugen Entwürfe, die sich nicht mehr in Tokens
+ * zurückführen lassen. Sechs Achsen mit je drei bis vier Stufen erzeugen
+ * Varianten, die man später 1:1 als Token-Set übernehmen kann.
+ */
+interface Props {
+  /** Wird auf gleichnamige Elemente und in enthaltene iframes angewendet. */
+  target?: string;
+  /** Eigener Speicher-Schlüssel, damit sich Lab-Läufe nicht gegenseitig überschreiben. */
+  storageKey?: string;
+}
+
+const { target = '[data-compare]', storageKey = 'ds-axes' } = Astro.props;
+
+const axes = [
+  { key: 'heading', label: 'Überschrift', options: ['sans', 'serif', 'display', 'mono'] },
+  { key: 'width', label: 'Breite', options: ['compact', 'normal', 'wide'] },
+  { key: 'density', label: 'Dichte', options: ['tight', 'balanced', 'airy'] },
+  { key: 'accent', label: 'Akzent', options: ['quiet', 'normal', 'strong'] },
+  { key: 'corner', label: 'Ecken', options: ['square', 'soft', 'round'] },
+  { key: 'motion', label: 'Bewegung', options: ['none', 'subtle', 'expressive'] },
+];
+---
+
+<form
+  class="flex flex-wrap items-end gap-x-5 gap-y-3 border border-line rounded-ds px-4 py-3"
+  data-axis-bar
+  data-target={target}
+  data-storage={storageKey}
+>
+  {
+    axes.map((axis) => (
+      <p class="flex flex-col gap-1">
+        <label for={`axis-${axis.key}`} class="text-micro text-muted uppercase tracking-wide">
+          {axis.label}
+        </label>
+        <select
+          id={`axis-${axis.key}`}
+          name={axis.key}
+          class="border border-line rounded-ds bg-surface px-2 py-1 text-small"
+        >
+          <option value="">—</option>
+          {axis.options.map((option) => (
+            <option value={option}>{option}</option>
+          ))}
+        </select>
+      </p>
+    ))
+  }
+  <button
+    type="reset"
+    class="border border-line rounded-ds px-3 py-1.5 text-small hover:bg-sunken"
+    data-axis-reset
+  >
+    Zurücksetzen
+  </button>
+</form>
+
+<script>
+  const AXES = ['heading', 'width', 'density', 'accent', 'corner', 'motion'] as const;
+
+  function applyTo(el: Element, values: Record<string, string>) {
+    for (const axis of AXES) {
+      const value = values[axis];
+      if (value) el.setAttribute(`data-ds-${axis}`, value);
+      else el.removeAttribute(`data-ds-${axis}`);
+    }
+  }
+
+  for (const bar of document.querySelectorAll<HTMLFormElement>('[data-axis-bar]')) {
+    const selector = bar.dataset.target ?? '[data-compare]';
+    const storageKey = bar.dataset.storage ?? 'ds-axes';
+    const values: Record<string, string> = JSON.parse(localStorage.getItem(storageKey) ?? '{}');
+
+    // Vorschauen laufen in iframes — same-origin, also ist deren
+    // documentElement direkt erreichbar. Alles andere wird am Element selbst gesetzt.
+    const bindFrame = (frame: HTMLIFrameElement) => {
+      const apply = () => {
+        const doc = frame.contentDocument;
+        if (doc?.documentElement) applyTo(doc.documentElement, values);
+      };
+      apply();
+      if (frame.dataset.axisBound) return;
+      frame.dataset.axisBound = 'true';
+      frame.addEventListener('load', apply);
+    };
+
+    const paint = () => {
+      for (const node of document.querySelectorAll(selector)) {
+        if (node instanceof HTMLIFrameElement) {
+          bindFrame(node);
+          continue;
+        }
+        applyTo(node, values);
+        for (const frame of node.querySelectorAll('iframe')) bindFrame(frame);
+      }
+    };
+
+    for (const axis of AXES) {
+      const field = bar.elements.namedItem(axis);
+      if (field instanceof HTMLSelectElement) field.value = values[axis] ?? '';
+    }
+    paint();
+
+    bar.addEventListener('change', (event) => {
+      const field = event.target;
+      if (!(field instanceof HTMLSelectElement)) return;
+      if (field.value) values[field.name] = field.value;
+      else delete values[field.name];
+      localStorage.setItem(storageKey, JSON.stringify(values));
+      paint();
+    });
+
+    bar.addEventListener('reset', () => {
+      for (const axis of AXES) delete values[axis];
+      localStorage.removeItem(storageKey);
+      requestAnimationFrame(paint);
+    });
+  }
+</script>

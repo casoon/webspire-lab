@@ -1,0 +1,70 @@
+name: CI
+
+# Bewusst sparsam: ein Job, ein Browser, gecachte Abhängigkeiten.
+# Kein Matrix-Build — dieses Repo hat eine Zielumgebung, nicht fünf.
+on:
+  push:
+    branches: [main]
+    # Reine Textdateien können den Build nicht brechen. design/**.md dagegen
+    # SCHON, das sind Content Collections — deshalb hier nicht ausgenommen.
+    paths-ignore:
+      - README.md
+      - NOTICE
+      - LICENSE
+  pull_request:
+    paths-ignore:
+      - README.md
+      - NOTICE
+      - LICENSE
+
+# Ein neuer Push macht den laufenden Job überflüssig.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    # Ohne Deckel läuft ein hängender Playwright-Server bis zum Limit.
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: package.json
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Nur Chromium: beide Playwright-Projekte fahren darauf, das
+      # Mobil-Projekt nutzt lediglich die iPhone-Geometrie.
+      - name: Playwright-Browser aus Cache
+        id: browser-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Chromium installieren
+        run: pnpm exec playwright install --with-deps chromium
+
+      - run: pnpm check
+
+      - run: pnpm type-check
+
+      - run: pnpm build
+
+      # Direkt playwright test, nicht pnpm test:e2e — das würde ein
+      # zweites Mal bauen.
+      - run: pnpm exec playwright test
+
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

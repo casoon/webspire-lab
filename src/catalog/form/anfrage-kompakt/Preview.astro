@@ -1,0 +1,161 @@
+---
+/**
+ * Anfrageformular, kompakt. Statisch, kein Client-JS.
+ *
+ * Der Fehlerzustand am Feld "E-Mail" ist fest verdrahtet. Anders ließe sich
+ * die Fehlerdarstellung im Katalog ohne Skript nicht zeigen, und genau die
+ * ist der Teil, der in generierten Formularen regelmäßig fehlt.
+ *
+ * Farben, Radien und Abstände kommen ausschließlich aus der Bridge, damit
+ * der Baustein unter jeder Designrichtung und jeder Achsenstellung trägt.
+ *
+ * Feldrahmen liegen auf `border-control`, nicht auf `border-line`:
+ * WCAG 1.4.11 verlangt 3:1 für die Begrenzung eines Bedienelements.
+ * `--ds-line` ist ein dekorativer Trenner und erreicht das bewusst nicht.
+ * Dekorative Trenner bleiben deshalb auf `border-line`.
+ */
+---
+
+<section class="section-y">
+  <div class="container-ds">
+    <div class="measure">
+      <h2 class="font-head text-h2">Anfrage senden</h2>
+      <p class="mt-3 text-muted">
+        Wir antworten innerhalb von zwei Werktagen. Felder mit dem Zusatz "Pflichtfeld" müssen
+        ausgefüllt werden.
+      </p>
+
+      <form class="mt-8 grid gap-6" method="post" action="#">
+        <fieldset>
+          <legend class="font-head text-h3">Kontaktdaten</legend>
+
+          <div class="mt-4 grid gap-6">
+            <div>
+              <label for="anfrage-name" class="block font-medium">
+                Name <span class="font-normal text-muted">(Pflichtfeld)</span>
+              </label>
+              <input
+                id="anfrage-name"
+                name="name"
+                type="text"
+                required
+                autocomplete="name"
+                class="field touch mt-2 block w-full rounded-ds border border-control bg-bg px-3 py-2"
+              />
+            </div>
+
+            <div>
+              <label for="anfrage-email" class="block font-medium">
+                E-Mail <span class="font-normal text-muted">(Pflichtfeld)</span>
+              </label>
+              <input
+                id="anfrage-email"
+                name="email"
+                type="email"
+                required
+                autocomplete="email"
+                value="anna.berger@"
+                aria-invalid="true"
+                aria-describedby="anfrage-email-fehler"
+                class="field touch mt-2 block w-full rounded-ds border border-control bg-bg px-3 py-2"
+              />
+              <p id="anfrage-email-fehler" class="mt-2 font-medium">
+                Fehler: Die Adresse ist unvollständig. Erwartet wird eine Form wie
+                anna.berger@beispiel.de.
+              </p>
+            </div>
+
+            <div>
+              <label for="anfrage-telefon" class="block font-medium">
+                Telefon <span class="font-normal text-muted">(optional)</span>
+              </label>
+              <input
+                id="anfrage-telefon"
+                name="telefon"
+                type="tel"
+                autocomplete="tel"
+                aria-describedby="anfrage-telefon-hinweis"
+                class="field touch mt-2 block w-full rounded-ds border border-control bg-bg px-3 py-2"
+              />
+              <p id="anfrage-telefon-hinweis" class="mt-2 text-small text-muted">
+                Nur nötig, wenn Sie einen Rückruf statt einer Antwort per E-Mail möchten.
+              </p>
+            </div>
+          </div>
+        </fieldset>
+
+        <div>
+          <label for="anfrage-nachricht" class="block font-medium">
+            Nachricht <span class="font-normal text-muted">(Pflichtfeld)</span>
+          </label>
+          <textarea
+            id="anfrage-nachricht"
+            name="nachricht"
+            rows="5"
+            required
+            aria-describedby="anfrage-nachricht-hinweis"
+            class="field mt-2 block w-full rounded-ds border border-control bg-bg px-3 py-2"></textarea>
+          <p id="anfrage-nachricht-hinweis" class="mt-2 text-small text-muted">
+            Worum geht es, und bis wann brauchen Sie eine Rückmeldung?
+          </p>
+        </div>
+
+        <div>
+          <label for="anfrage-einwilligung" class="touch flex items-center gap-3">
+            <input
+              id="anfrage-einwilligung"
+              name="einwilligung"
+              type="checkbox"
+              required
+              class="box shrink-0 rounded-ds border border-control bg-bg"
+            />
+            <span>
+              Ich bin damit einverstanden, dass meine Angaben zur Bearbeitung der Anfrage
+              gespeichert werden. <span class="text-muted">(Pflichtfeld)</span>
+            </span>
+          </label>
+        </div>
+
+        <div>
+          <button
+            type="submit"
+            class="touch inline-flex items-center justify-center rounded-ds bg-accent px-5 font-medium text-accent-ink"
+          >
+            Anfrage senden
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  /*
+    Zielgröße. WCAG 2.5.8 fordert 24 px, WCAG 2.5.5 und die gängigen
+    Plattform-Richtlinien fordern 44 px. Bewusst als feste Länge und nicht
+    über die Spacing-Skala: die Dichte-Achse darf die Zielgröße nicht unter
+    das Minimum drücken.
+  */
+  .touch {
+    min-block-size: var(--ds-target-min);
+  }
+
+  /*
+    Der Fehlerzustand läuft nicht über Farbe, sondern über die Rahmenstärke
+    plus das Wort "Fehler" im verknüpften Text. Der Faktor hängt am
+    Rahmen-Token, damit er einer Richtung folgt.
+  */
+  .field[aria-invalid='true'] {
+    border-width: calc(var(--ds-border) * 2);
+  }
+
+  /*
+    Checkbox: die sichtbare Größe folgt der Textgröße, die Zielgröße liefert
+    das umschließende Label.
+  */
+  .box {
+    inline-size: 1.25em;
+    block-size: 1.25em;
+    accent-color: var(--ds-accent);
+  }
+</style>

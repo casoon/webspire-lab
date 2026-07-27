@@ -1,0 +1,132 @@
+---
+import AxisBar from '../../components/AxisBar.astro';
+import Lab from '../../layouts/Lab.astro';
+
+const axes = [
+  {
+    key: 'heading',
+    values: 'sans · serif · display · mono',
+    effect: 'Stimme der Überschriften. Ändert Familie, Laufweite und Schriftschnitt.',
+  },
+  {
+    key: 'width',
+    values: 'compact · normal · wide',
+    effect: 'Containerbreite und Zeilenmaß. Betrifft Lesbarkeit, nicht Optik.',
+  },
+  {
+    key: 'density',
+    values: 'tight · balanced · airy',
+    effect: 'Dreht an --spacing. Damit skaliert das gesamte Layout, nicht nur ein Abstand.',
+  },
+  {
+    key: 'accent',
+    values: 'quiet · normal · strong',
+    effect: 'Sättigung der Akzentfarbe. Die 10-%-Flächenregel gilt unabhängig davon.',
+  },
+  {
+    key: 'corner',
+    values: 'square · soft · round',
+    effect: 'Formensprache. Radien über 16px lesen sich als Standard-Template.',
+  },
+  {
+    key: 'motion',
+    values: 'none · subtle · expressive',
+    effect: 'Dauer und Weg. „none“ schaltet ab statt zu verlangsamen.',
+  },
+];
+---
+
+<Lab
+  title="Achsen"
+  lead="Sechs Stellschrauben statt freier Pixelwerte. Was hier eingestellt wird, lässt sich als Token-Set übernehmen — ein per Hand nachjustierter Entwurf nicht."
+>
+  <AxisBar target="#achsen-preview" storageKey="ds-axes-demo" />
+
+  <p class="mt-3 text-micro text-muted">
+    Die Einstellung gilt auch für die Vergleichsseiten im Lab — sie liegt unter dem Schlüssel
+    <code>ds-axes-demo</code> getrennt vom Lab-Schlüssel <code>ds-axes</code>.
+  </p>
+
+  <section
+    id="achsen-preview"
+    class="mt-8 border border-line rounded-ds bg-bg p-8 font-body"
+    data-ds-corner="soft"
+  >
+    <p class="text-micro text-muted uppercase tracking-wide">Musterfläche</p>
+    <h2 class="font-head text-display mt-2">Sechs Achsen, kein Regler</h2>
+    <p class="measure mt-4 text-lead">
+      Dieselbe Fläche unter allen Einstellungen. Wenn eine Achse den Eindruck nicht spürbar
+      verändert, ist sie im Entwurf nicht ausgenutzt.
+    </p>
+    <p class="measure mt-4">
+      Fließtext auf Zeilenmaß. Er zeigt, wie sich Dichte und Breite auf Lesbarkeit auswirken —
+      der Punkt, an dem die meisten generierten Layouts kippen, weil sie Abstände dekorativ und
+      nicht funktional setzen.
+    </p>
+
+    <div class="mt-8 flex flex-wrap items-center gap-3">
+      <button
+        type="button"
+        class="rounded-ds bg-accent px-5 py-2.5 text-accent-ink transition-colors duration-(--ds-dur-base) ease-ds hover:opacity-90"
+      >
+        Primäre Aktion
+      </button>
+      <button
+        type="button"
+        class="rounded-ds border border-line px-5 py-2.5 transition-colors duration-(--ds-dur-base) ease-ds hover:bg-sunken"
+      >
+        Sekundär
+      </button>
+      <a href="#achsen-preview" class="underline underline-offset-4 hover:text-accent">Textlink</a>
+    </div>
+
+    <div class="mt-8 grid gap-4 sm:grid-cols-2">
+      <div class="rounded-ds border border-line p-5">
+        <h3 class="font-head text-h3">Fläche mit Rahmen</h3>
+        <p class="mt-2 text-muted">Rahmen oder Schatten — nie beides. Sonst entsteht die Geisterkarte.</p>
+      </div>
+      <div class="rounded-ds bg-surface p-5">
+        <h3 class="font-head text-h3">Fläche ohne Rahmen</h3>
+        <p class="mt-2 text-muted">Abgrenzung über Farbwert statt über Linie.</p>
+      </div>
+    </div>
+
+    <div class="mt-8 max-w-sm">
+      <label for="demo-mail" class="block text-small text-muted">E-Mail</label>
+      <input
+        id="demo-mail"
+        type="email"
+        class="mt-1.5 w-full rounded-ds border border-line bg-bg px-3 py-2"
+        placeholder="name@firma.de"
+      />
+    </div>
+  </section>
+
+  <h2 class="font-head text-h2 mt-14">Was die Achsen tun</h2>
+  <table class="mt-4 w-full border-collapse text-left">
+    <thead>
+      <tr class="border-b border-line text-micro text-muted uppercase tracking-wide">
+        <th scope="col" class="py-2 pr-4 font-normal">Achse</th>
+        <th scope="col" class="py-2 pr-4 font-normal">Stufen</th>
+        <th scope="col" class="py-2 font-normal">Wirkung</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        axes.map((axis) => (
+          <tr class="border-b border-line align-baseline">
+            <th scope="row" class="py-2.5 pr-4 font-normal">
+              <code>data-ds-{axis.key}</code>
+            </th>
+            <td class="py-2.5 pr-4 text-muted">{axis.values}</td>
+            <td class="py-2.5 text-muted">{axis.effect}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+
+  <p class="measure mt-6 text-muted">
+    Definition in <code>src/styles/tokens.css</code>, Begründung in <code>design/TOKEN-AXES.md</code>.
+  </p>
+</Lab>

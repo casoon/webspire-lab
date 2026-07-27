@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Astro
+dist/
+.astro/
+
+# Playwright
+test-results/
+playwright-report/
+
+# Arbeits-Screenshots aus dem Lab-Lauf.
+# Kuratierte Referenz-Screenshots liegen unter design/references/screenshots/ und werden getrackt.
+screenshots/
+
+# System
+.DS_Store
+
+# Logs
+*-debug.log*
+
+# Editor
+.vscode/
+.idea/
+
+temp/

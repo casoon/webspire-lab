@@ -1,0 +1,99 @@
+---
+import AxisBar from '../../../components/AxisBar.astro';
+import CompareGrid from '../../../components/CompareGrid.astro';
+import Lab from '../../../layouts/Lab.astro';
+
+const base = '/lab/beispiel-nordwerk/richtungen';
+
+const directions = [
+  {
+    href: `${base}/01-werkverzeichnis/`,
+    label: 'Werkverzeichnis',
+    note: 'Dichtes zweispaltiges Register mit Mono-Überschriften, kleinen Graden und gefüllten Kacheln, ohne jede Bewegung.',
+  },
+  {
+    href: `${base}/02-aufmass/`,
+    label: 'Aufmaß',
+    note: 'Dunkler Grund, sehr große Grotesk, eine Spalte und viel Luft, die primäre Aktion steht allein auf der Fläche.',
+  },
+  {
+    href: `${base}/03-bestand/`,
+    label: 'Bestand',
+    note: 'Getönter Salbeigrund, Serifen-Überschriften, asymmetrischer Split mit stehender Bildfläche und Zeilenwerk statt Kacheln.',
+  },
+];
+
+const criteria = [
+  {
+    name: 'Trägt die primäre Aktion',
+    test: 'Ist „Aufmaß-Termin anfragen“ innerhalb der ersten Bildschirmhöhe eindeutig die lauteste Stelle, ohne dass die Akzentfläche zehn Prozent überschreitet?',
+  },
+  {
+    name: 'Passt zur Zielgruppe',
+    test: 'Lesen 45- bis 70-jährige Altbaubesitzer den Fließtext ohne Mühe? Grad, Kontrast und Zeilenmaß entscheiden das, nicht der Gesamteindruck.',
+  },
+  {
+    name: 'Verträgt Inhaltsdichte',
+    test: 'Der Ablauf hat hier vier Schritte. Was passiert bei acht Schritten und zwei weiteren Abschnitten? Eine Richtung, die nur bei wenig Inhalt funktioniert, fällt raus.',
+  },
+  {
+    name: 'Hält ohne Bilder',
+    test: 'Alle Bildflächen sind Platzhalter. Wenn eine Richtung erst mit Fotos funktioniert, ist die Gestaltung geliehen.',
+  },
+  {
+    name: 'Bleibt in Tokens beschreibbar',
+    test: 'Jede Richtung besteht aus Überschreibungen von Schicht-1-Tokens plus einer Achsenstellung. Was sich nur per Hand nachjustieren lässt, ist nicht übernehmbar.',
+  },
+];
+---
+
+<Lab
+  title="Nordwerk Fensterbau"
+  lead="Drei Richtungen für denselben Ausschnitt: Hero, Ablauf des Aufmaßes, Fußzeile. Gleicher Text, gleiche primäre Aktion, unterschiedliche Gestaltung."
+>
+  <section aria-labelledby="einordnung">
+    <h2 id="einordnung" class="font-head text-h2">Was hier verglichen wird</h2>
+    <p class="measure mt-3 text-muted">
+      Verglichen wird nicht, welche Variante hübscher ist, sondern welche das Ziel des Briefings
+      trägt: qualifizierte Anfragen für ein Vor-Ort-Aufmaß von Altbaubesitzern und
+      Hausverwaltungen. Der Inhalt ist in allen drei Varianten Zeichen für Zeichen derselbe.
+      Unterschiedlich sind Typografie, Raster, Farbwelt und Inhaltsdichte.
+    </p>
+    <p class="measure mt-3 text-muted">
+      Briefing und Gestaltungsrahmen liegen unter <code>design/briefs/beispiel-nordwerk.md</code>.
+      Die Richtungen selbst liegen unter
+      <code>src/pages/lab/beispiel-nordwerk/richtungen/</code> und setzen ihre Tokens jeweils in
+      einem eigenen <code>:root</code>-Block.
+    </p>
+  </section>
+
+  <section aria-labelledby="kriterien" class="mt-10">
+    <h2 id="kriterien" class="font-head text-h2">Bewertungskriterien</h2>
+    <dl class="mt-4 space-y-4">
+      {
+        criteria.map((criterion) => (
+          <div class="grid gap-x-6 gap-y-1 md:grid-cols-[16rem_1fr]">
+            <dt class="text-ink">{criterion.name}</dt>
+            <dd class="measure text-muted">{criterion.test}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <section aria-labelledby="vergleich" class="mt-12">
+    <h2 id="vergleich" class="font-head text-h2">Vergleich</h2>
+    <p class="measure mt-3 text-muted">
+      Die Achsenleiste wirkt auf alle drei Vorschauen gleichzeitig. Sie zeigt, ob eine Richtung
+      nur in genau einer Einstellung funktioniert.
+    </p>
+
+    <div class="mt-4">
+      <AxisBar storageKey="ds-axes-nordwerk" />
+    </div>
+
+    <div class="mt-6">
+      <CompareGrid items={directions} frameHeight={1600} />
+    </div>
+  </section>
+</Lab>

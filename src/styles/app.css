@@ -1,0 +1,92 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+/*
+  Basis-Layer. Bewusst dünn: das Lab soll Entwürfe nicht heimlich
+  mitgestalten. Alles, was hier steht, muss für JEDE Designrichtung
+  richtig sein — sonst gehört es in die Richtung.
+*/
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--ds-bg);
+    color: var(--ds-text);
+    font-family: var(--ds-font-body);
+    font-size: var(--ds-text-body);
+    font-weight: var(--ds-weight-body);
+    line-height: var(--ds-leading-body);
+    letter-spacing: var(--ds-tracking-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--ds-font-head);
+    font-weight: var(--ds-weight-head);
+    line-height: var(--ds-leading-head);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Sichtbarer Fokus ist nicht verhandelbar — auch nicht in einem Entwurf. */
+  :focus-visible {
+    outline: 2px solid var(--ds-accent);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--ds-accent);
+    color: var(--ds-accent-ink);
+  }
+
+  /* Zahlen in Vergleichstabellen dürfen nicht springen. */
+  table :is(td, th) {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@utility container-ds {
+  width: 100%;
+  max-width: var(--ds-container);
+  margin-inline: auto;
+  padding-inline: var(--ds-gutter);
+}
+
+/*
+  Nie zusammen mit container-ds am selben Element: beide setzen max-width,
+  und measure gewinnt (steht später), womit die Container-Zentrierung
+  auf Zeilenmaß zusammenfällt. Container außen, measure am Textelement.
+*/
+@utility measure {
+  max-width: var(--ds-measure);
+}
+
+@utility section-y {
+  padding-block: var(--ds-section-y);
+}
+
+/* Skip-Link: sichtbar sobald fokussiert. */
+@utility skip-link {
+  position: absolute;
+  inset-inline-start: 0.5rem;
+  inset-block-start: -3rem;
+  z-index: 100;
+  background-color: var(--ds-text);
+  color: var(--ds-bg);
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--ds-radius);
+  transition: inset-block-start var(--ds-dur-fast) var(--ds-ease);
+
+  &:focus-visible {
+    inset-block-start: 0.5rem;
+  }
+}

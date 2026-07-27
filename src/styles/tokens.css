@@ -1,0 +1,269 @@
+/*
+  Design-Tokens in drei Schichten.
+
+  Schicht 1  :root            — Basiswerte. Neutral, bewusst charakterlos.
+                                Eine Designrichtung überschreibt sie, das Lab liefert
+                                absichtlich KEINE hübsche Voreinstellung mit.
+  Schicht 2  [data-ds-*]      — sechs Achsen als Stellschrauben (siehe design/TOKEN-AXES.md).
+                                Gelten auf jedem Container, nicht nur global.
+  Schicht 3  @theme inline    — Brücke zu Tailwind. `inline` ist Pflicht: ohne das friert
+                                Tailwind die Werte ein und Scope-Overrides greifen nicht.
+
+  Regel: Utilities benutzen die Bridge (bg-surface, text-h1, rounded-ds).
+  Rohe --ds-* nur dort, wo es keine Utility gibt.
+*/
+
+/* ─── Schicht 1 — Basis ─────────────────────────────────────────────── */
+
+:root {
+  color-scheme: light;
+
+  /* Farbe. Akzent liegt in OKLCH-Einzelkomponenten, damit die Achse
+     `accent` nur die Chroma anfasst und Farbton/Helligkeit stabil bleiben. */
+  --ds-accent-h: 254;
+  --ds-accent-l: 54%;
+  --ds-accent-c-base: 0.12;
+  --ds-accent-c: var(--ds-accent-c-base);
+  --ds-accent: oklch(var(--ds-accent-l) var(--ds-accent-c) var(--ds-accent-h));
+  --ds-accent-ink: oklch(99% 0 0);
+  --ds-accent-soft: oklch(from var(--ds-accent) 96% calc(c * 0.35) h);
+
+  --ds-bg: oklch(99% 0.002 260);
+  --ds-surface: oklch(97% 0.004 260);
+  --ds-sunken: oklch(94% 0.005 260);
+  --ds-text: oklch(24% 0.014 260);
+  --ds-muted: oklch(47% 0.012 260);
+  --ds-line: oklch(89% 0.006 260);
+  /* Rahmen von Bedienelementen brauchen nach WCAG 1.4.11 mindestens 3:1 gegen
+     die Fläche dahinter. --ds-line ist ein dekorativer Trenner und erreicht das
+     bewusst nicht. Wer eine Richtung baut, überschreibt beide Werte. */
+  --ds-control-line: oklch(55% 0.014 260);
+
+  /* Typografie. Keine konkrete Schrift als Default — die wird pro Richtung
+     gewählt und geladen, nicht vom Lab vorgegeben. */
+  --ds-font-body: ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --ds-font-serif: ui-serif, Charter, Georgia, "Times New Roman", serif;
+  --ds-font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --ds-font-display: var(--ds-font-body);
+  --ds-font-head: var(--ds-font-body);
+
+  --ds-tracking-display: -0.025em;
+  --ds-tracking-body: 0em;
+  --ds-weight-head: 650;
+  --ds-weight-body: 400;
+
+  --ds-text-display: clamp(2.75rem, 1.9rem + 3.6vw, 5rem);
+  --ds-text-h1: clamp(2.1rem, 1.6rem + 2.1vw, 3.25rem);
+  --ds-text-h2: clamp(1.55rem, 1.3rem + 1.1vw, 2.15rem);
+  --ds-text-h3: clamp(1.2rem, 1.1rem + 0.45vw, 1.45rem);
+  --ds-text-lead: clamp(1.1rem, 1.03rem + 0.32vw, 1.3rem);
+  --ds-text-body: 1rem;
+  --ds-text-small: 0.875rem;
+  --ds-text-micro: 0.78rem;
+
+  --ds-leading-display: 1.02;
+  --ds-leading-head: 1.14;
+  --ds-leading-body: 1.6;
+
+  /* Raum. --spacing ist Tailwinds Multiplikator-Basis: p-8 wird zu
+     calc(var(--spacing) * 8). Die Dichte-Achse dreht deshalb an genau
+     dieser einen Zahl und verschiebt damit das gesamte Layout konsistent. */
+  --spacing: 0.25rem;
+  --ds-section-y: 6rem;
+  /* Die CSS-Einheit ch misst die Breite der Null, und die ist breiter als ein
+     Durchschnittszeichen. 55ch ergibt real rund 70 Zeichen. Wer hier 70ch
+     einträgt, landet bei 90 und wundert sich über SLOP-MEASURE. */
+  --ds-measure: 55ch;
+  --ds-container: 72rem;
+  --ds-gutter: 1.5rem;
+
+  /* Form */
+  /* Mindest-Zielgröße. Als eigenes Token, weil die Dichte-Achse an --spacing
+     dreht und ein über die Spacing-Skala gebautes Ziel bei `tight` unter 44px
+     fällt. Barrierefreiheit ist keine Gestaltungsachse. */
+  --ds-target-min: 2.75rem;
+
+  --ds-radius: 0.5rem;
+  --ds-radius-lg: 0.75rem;
+  --ds-radius-pill: 999px;
+  --ds-border: 1px;
+  --ds-shadow: 0 1px 2px oklch(0% 0 0 / 0.06);
+
+  /* Bewegung */
+  --ds-dur-fast: 120ms;
+  --ds-dur-base: 220ms;
+  --ds-dur-slow: 380ms;
+  --ds-ease: cubic-bezier(0.2, 0, 0, 1);
+  --ds-shift: 8px;
+}
+
+/* ─── Schicht 2 — Achsen ────────────────────────────────────────────── */
+/*
+  Jeder Selektor nennt sein Attribut zweimal. Das ist kein Versehen.
+
+  Eine Designrichtung setzt ihre Tokens per <style is:global> auf :root, und
+  Astro hängt diesen Block NACH app.css in das Dokument. Bei gleicher
+  Spezifität gewinnt der spätere Block — die Richtung würde also jede
+  Achseneinstellung überschreiben, genau umgekehrt zur Absicht.
+
+  Die Verdopplung hebt die Achsen auf Spezifität 0,2,0 und stellt sie damit
+  unabhängig von der Quellreihenfolge über jedes :root. Eine Richtung darf
+  deshalb alle Tokens setzen, ohne eine Achse stillzulegen.
+*/
+
+/* headingFont — welche Stimme die Überschriften haben */
+[data-ds-heading="sans"][data-ds-heading] {
+  --ds-font-head: var(--ds-font-body);
+}
+[data-ds-heading="serif"][data-ds-heading] {
+  --ds-font-head: var(--ds-font-serif);
+  --ds-tracking-display: -0.01em;
+}
+[data-ds-heading="display"][data-ds-heading] {
+  --ds-font-head: var(--ds-font-display);
+}
+[data-ds-heading="mono"][data-ds-heading] {
+  --ds-font-head: var(--ds-font-mono);
+  --ds-tracking-display: -0.01em;
+  --ds-weight-head: 500;
+}
+
+/* contentWidth — wie breit Inhalt laufen darf */
+[data-ds-width="compact"][data-ds-width] {
+  --ds-container: 58rem;
+  --ds-measure: 46ch;
+}
+[data-ds-width="normal"][data-ds-width] {
+  --ds-container: 72rem;
+  --ds-measure: 55ch;
+}
+[data-ds-width="wide"][data-ds-width] {
+  --ds-container: 88rem;
+  --ds-measure: 61ch;
+}
+
+/* spacingDensity — Luft im Layout */
+[data-ds-density="tight"][data-ds-density] {
+  --spacing: 0.21rem;
+  --ds-section-y: 3.5rem;
+  --ds-leading-body: 1.5;
+  --ds-gutter: 1rem;
+}
+[data-ds-density="balanced"][data-ds-density] {
+  --spacing: 0.25rem;
+  --ds-section-y: 6rem;
+  --ds-leading-body: 1.6;
+  --ds-gutter: 1.5rem;
+}
+[data-ds-density="airy"][data-ds-density] {
+  --spacing: 0.3rem;
+  --ds-section-y: 9rem;
+  --ds-leading-body: 1.7;
+  --ds-gutter: 2rem;
+}
+
+/* accentStrength — wie laut die Akzentfarbe ist.
+   Achtung: die Achse regelt die Sättigung, nicht die Fläche.
+   Die 10-%-Flächenregel aus [[ui-design]] gilt unabhängig davon weiter. */
+[data-ds-accent="quiet"][data-ds-accent] {
+  --ds-accent-c: calc(var(--ds-accent-c-base) * 0.45);
+}
+[data-ds-accent="normal"][data-ds-accent] {
+  --ds-accent-c: var(--ds-accent-c-base);
+}
+[data-ds-accent="strong"][data-ds-accent] {
+  --ds-accent-c: calc(var(--ds-accent-c-base) * 1.45);
+}
+
+/* cornerStyle — Formensprache */
+[data-ds-corner="square"][data-ds-corner] {
+  --ds-radius: 0;
+  --ds-radius-lg: 0;
+  --ds-radius-pill: 0;
+}
+[data-ds-corner="soft"][data-ds-corner] {
+  --ds-radius: 0.375rem;
+  --ds-radius-lg: 0.625rem;
+}
+[data-ds-corner="round"][data-ds-corner] {
+  --ds-radius: 0.75rem;
+  --ds-radius-lg: 1rem;
+}
+
+/* motionLevel — `none` schaltet ab statt zu verlangsamen. */
+[data-ds-motion="none"][data-ds-motion] {
+  --ds-dur-fast: 1ms;
+  --ds-dur-base: 1ms;
+  --ds-dur-slow: 1ms;
+  --ds-shift: 0px;
+}
+[data-ds-motion="subtle"][data-ds-motion] {
+  --ds-dur-fast: 120ms;
+  --ds-dur-base: 220ms;
+  --ds-dur-slow: 380ms;
+  --ds-shift: 8px;
+}
+[data-ds-motion="expressive"][data-ds-motion] {
+  --ds-dur-fast: 160ms;
+  --ds-dur-base: 320ms;
+  --ds-dur-slow: 560ms;
+  --ds-shift: 16px;
+}
+
+/* Nutzerpräferenz schlägt jede Achse und jede Richtung — deshalb hier
+   Spezifität 0,2,0 bzw. 0,0,2. */
+@media (prefers-reduced-motion: reduce) {
+  :root:root,
+  [data-ds-motion][data-ds-motion] {
+    --ds-dur-fast: 1ms;
+    --ds-dur-base: 1ms;
+    --ds-dur-slow: 1ms;
+    --ds-shift: 0px;
+  }
+}
+
+/* ─── Schicht 3 — Tailwind-Bridge ───────────────────────────────────── */
+
+@theme inline {
+  --color-bg: var(--ds-bg);
+  --color-surface: var(--ds-surface);
+  --color-sunken: var(--ds-sunken);
+  --color-ink: var(--ds-text);
+  --color-muted: var(--ds-muted);
+  --color-line: var(--ds-line);
+  --color-control: var(--ds-control-line);
+  --color-accent: var(--ds-accent);
+  --color-accent-ink: var(--ds-accent-ink);
+  --color-accent-soft: var(--ds-accent-soft);
+
+  --font-body: var(--ds-font-body);
+  --font-head: var(--ds-font-head);
+  --font-mono: var(--ds-font-mono);
+
+  --text-display: var(--ds-text-display);
+  --text-display--line-height: var(--ds-leading-display);
+  --text-display--letter-spacing: var(--ds-tracking-display);
+  --text-h1: var(--ds-text-h1);
+  --text-h1--line-height: var(--ds-leading-head);
+  --text-h1--letter-spacing: var(--ds-tracking-display);
+  --text-h2: var(--ds-text-h2);
+  --text-h2--line-height: var(--ds-leading-head);
+  --text-h3: var(--ds-text-h3);
+  --text-h3--line-height: var(--ds-leading-head);
+  --text-lead: var(--ds-text-lead);
+  --text-lead--line-height: 1.45;
+  --text-body: var(--ds-text-body);
+  --text-body--line-height: var(--ds-leading-body);
+  --text-small: var(--ds-text-small);
+  --text-micro: var(--ds-text-micro);
+
+  --radius-ds: var(--ds-radius);
+  --radius-ds-lg: var(--ds-radius-lg);
+  --radius-ds-pill: var(--ds-radius-pill);
+
+  --container-ds: var(--ds-container);
+
+  --shadow-ds: var(--ds-shadow);
+
+  --ease-ds: var(--ds-ease);
+}

@@ -1,0 +1,51 @@
+---
+/**
+ * Isolierte Vorschau — kein Lab-Chrome, keine Navigation.
+ *
+ * Jede Designrichtung und jeder Katalog-Baustein rendert hierin, damit im
+ * Vergleich wirklich nur der Entwurf zu sehen ist. Die Achsen sitzen auf
+ * <html>, nicht auf einem Wrapper: sonst greifen Vollflächen-Backgrounds
+ * einer Richtung nicht bis zum Viewport-Rand.
+ */
+export interface Axes {
+  heading?: 'sans' | 'serif' | 'display' | 'mono';
+  width?: 'compact' | 'normal' | 'wide';
+  density?: 'tight' | 'balanced' | 'airy';
+  accent?: 'quiet' | 'normal' | 'strong';
+  corner?: 'square' | 'soft' | 'round';
+  motion?: 'none' | 'subtle' | 'expressive';
+}
+
+interface Props {
+  title: string;
+  axes?: Axes;
+  /** Klassen für <body>, z. B. eine richtungsspezifische Scope-Klasse. */
+  bodyClass?: string;
+}
+
+const { title, axes = {}, bodyClass = '' } = Astro.props;
+
+import '../styles/app.css';
+---
+
+<!doctype html>
+<html
+  lang="de"
+  data-ds-heading={axes.heading}
+  data-ds-width={axes.width}
+  data-ds-density={axes.density}
+  data-ds-accent={axes.accent}
+  data-ds-corner={axes.corner}
+  data-ds-motion={axes.motion}
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{title}</title>
+    <slot name="head" />
+  </head>
+  <body class={bodyClass}>
+    <slot />
+  </body>
+</html>

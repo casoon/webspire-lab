@@ -1,0 +1,135 @@
+---
+import Lab from '../layouts/Lab.astro';
+import { labState } from '../lib/state';
+
+const state = await labState();
+const { next, phases, references, catalog, active, activeDirections } = state;
+
+const marker: Record<string, string> = { done: '✓', current: '▸', open: '·' };
+---
+
+<Lab
+  title="Design-Lab"
+  lead="Designrichtungen entstehen durch Bauen, Vergleichen und Verwerfen. Diese Seite sagt, was als Nächstes dran ist — das Verfahren steht in design/README.md."
+>
+  <section aria-labelledby="next-step" class="border border-ink rounded-ds p-6">
+    <p class="text-micro text-muted uppercase tracking-wide">
+      Nächster Schritt — Phase {next.phase}
+    </p>
+    <h2 id="next-step" class="font-head text-h2 mt-1">{next.title}</h2>
+    <p class="measure mt-3">{next.action}</p>
+    <p class="measure mt-2 text-muted">{next.why}</p>
+
+    <dl class="mt-5 grid gap-2 sm:grid-cols-2">
+      {
+        next.command && (
+          <div class="flex gap-3">
+            <dt class="w-20 shrink-0 text-micro text-muted uppercase tracking-wide">Befehl</dt>
+            <dd><code>{next.command}</code></dd>
+          </div>
+        )
+      }
+      {
+        next.target && (
+          <div class="flex gap-3">
+            <dt class="w-20 shrink-0 text-micro text-muted uppercase tracking-wide">Ergebnis</dt>
+            <dd class="break-all"><code>{next.target}</code></dd>
+          </div>
+        )
+      }
+    </dl>
+  </section>
+
+  <h2 class="font-head text-h2 mt-14">Stand</h2>
+  <ol class="mt-4 divide-y divide-line border-y border-line">
+    {
+      phases.map((phase) => (
+        <li class="flex flex-wrap items-baseline gap-x-3 gap-y-1 py-3">
+          <span
+            aria-hidden="true"
+            class:list={[
+              'w-4 shrink-0',
+              phase.state === 'current' ? 'text-accent' : 'text-muted',
+            ]}
+          >
+            {marker[phase.state]}
+          </span>
+          <span class="w-6 shrink-0 text-muted tabular-nums">{phase.n}</span>
+          <span class:list={[phase.state === 'open' ? 'text-muted' : '']}>
+            {phase.title}
+            {phase.state === 'current' && (
+              <span class="ml-2 text-micro text-accent uppercase tracking-wide">jetzt</span>
+            )}
+            {phase.state === 'done' && <span class="sr-only"> — erledigt</span>}
+          </span>
+          {phase.note && <span class="ml-auto text-micro text-muted">{phase.note}</span>}
+        </li>
+      ))
+    }
+  </ol>
+
+  <h2 class="font-head text-h2 mt-14">Wo es klemmt</h2>
+  <ul class="measure mt-3 space-y-2 text-muted">
+    {
+      references.total < references.target && (
+        <li>
+          Die Referenzbibliothek hat {references.total} von {references.target} Einträgen. Alles
+          danach steht auf Vermutungen. → <a href="/referenzen/" class="text-ink underline underline-offset-4">Referenzen</a>
+        </li>
+      )
+    }
+    {
+      references.total > 0 && references.liveShare < 50 && (
+        <li>
+          Nur {references.liveShare}% der Referenzen sind reale Websites. Präsentationsdesigns
+          kennen keine Fehlerzustände und keine Formulare.
+        </li>
+      )
+    }
+    {
+      references.missingCritical.length > 0 && references.total > 0 && (
+        <li>
+          Keine Referenz zeigt {references.missingCritical.join(', ')}. Genau dort scheitern
+          generierte Designs.
+        </li>
+      )
+    }
+    {
+      active && activeDirections > 0 && activeDirections < 5 && (
+        <li>
+          {active.id} hat {activeDirections} Richtungen. Der Vergleich trägt erst ab fünf. →{' '}
+          <a href={`/lab/${active.id}/`} class="text-ink underline underline-offset-4">Vergleich</a>
+        </li>
+      )
+    }
+    {
+      catalog.unchecked > 0 && (
+        <li>
+          {catalog.unchecked} Katalogbaustein{catalog.unchecked === 1 ? '' : 'e'} ohne
+          a11y-Nachweis. → <a href="/katalog/" class="text-ink underline underline-offset-4">Katalog</a>
+        </li>
+      )
+    }
+    {
+      catalog.missingFamilies.length > 0 && (
+        <li>
+          Katalog deckt {catalog.missingFamilies.join(', ')} noch nicht ab.
+        </li>
+      )
+    }
+    {
+      references.total >= references.target &&
+        references.liveShare >= 50 &&
+        references.missingCritical.length === 0 &&
+        catalog.unchecked === 0 &&
+        catalog.missingFamilies.length === 0 && <li class="text-ink">Nichts Offensichtliches.</li>
+    }
+  </ul>
+
+  <h2 class="font-head text-h2 mt-14">Was dieses Repo nicht ist</h2>
+  <ul class="measure mt-3 list-disc space-y-1.5 pl-5 text-muted">
+    <li>Keine Komponentenbibliothek zum Installieren — der Katalog wird kopiert und angepasst.</li>
+    <li>Keine Sammlung hübscher Voreinstellungen. Die Basis-Tokens sind absichtlich charakterlos.</li>
+    <li>Kein Produktionsprojekt. Was hier überzeugt, zieht als Code ins Zielprojekt um.</li>
+  </ul>
+</Lab>

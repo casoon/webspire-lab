@@ -1,0 +1,79 @@
+---
+/**
+ * Werkzeug-Chrome. Sieht bewusst nach Werkzeug aus und nicht nach Entwurf —
+ * sonst konkurriert die Lab-Oberfläche mit dem, was sie zeigen soll.
+ */
+interface Props {
+  title: string;
+  lead?: string;
+}
+
+const { title, lead } = Astro.props;
+
+const nav = [
+  { href: '/lab/', label: 'Lab' },
+  { href: '/katalog/', label: 'Katalog' },
+  { href: '/referenzen/', label: 'Referenzen' },
+  { href: '/achsen/', label: 'Achsen' },
+];
+
+const path = Astro.url.pathname;
+
+import '../styles/app.css';
+---
+
+<!doctype html>
+<html lang="de" data-ds-corner="soft" data-ds-motion="subtle">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{title} — casoon design lab</title>
+  </head>
+  <body class="min-h-dvh bg-bg text-ink font-mono text-small">
+    <a href="#main" class="skip-link">Zum Inhalt</a>
+
+    <header class="border-b border-line">
+      <div class="container-ds flex flex-wrap items-baseline gap-x-6 gap-y-2 py-4">
+        <a href="/" class="font-head font-semibold tracking-tight">casoon<span class="text-muted">/design</span></a>
+        <nav aria-label="Hauptnavigation">
+          <ul class="flex gap-4">
+            {
+              nav.map((item) => {
+                const active = path.startsWith(item.href);
+                return (
+                  <li>
+                    <a
+                      href={item.href}
+                      aria-current={active ? 'page' : undefined}
+                      class:list={[
+                        'underline-offset-4 hover:underline',
+                        active ? 'text-ink underline' : 'text-muted',
+                      ]}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                );
+              })
+            }
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="container-ds py-10">
+      <h1 class="font-head text-h1">{title}</h1>
+      {lead && <p class="measure mt-3 text-muted">{lead}</p>}
+      <div class="mt-8">
+        <slot />
+      </div>
+    </main>
+
+    <footer class="border-t border-line mt-16">
+      <p class="container-ds py-6 text-micro text-muted">
+        Prozess und Regeln liegen im Repo unter <code>design/</code> — nicht auf dieser Seite.
+      </p>
+    </footer>
+  </body>
+</html>
