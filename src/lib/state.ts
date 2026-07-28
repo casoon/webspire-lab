@@ -213,8 +213,8 @@ export async function labState() {
       return {
         phase: 6,
         title: 'Übernehmen',
-        action: `Gewählte Richtung in das Zielprojekt überführen, wiederverwendbare Teile in den Katalog, ${slug} auf shipped setzen.`,
-        why: 'Was hier überzeugt, gehört ins Kundenprojekt. Das Lab ist keine Produktionsumgebung.',
+        action: `Gewählte Richtung ins Produktionsprojekt überführen, wiederverwendbare Teile in den Katalog, ${slug} auf shipped setzen.`,
+        why: 'Was hier überzeugt, gehört ins Produktionsprojekt. Das Lab ist keine Produktionsumgebung.',
         command: '/design-catalog-entry',
         target: 'src/catalog/',
       };

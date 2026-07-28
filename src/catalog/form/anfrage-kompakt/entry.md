@@ -31,12 +31,12 @@ Baustein und nicht mehr ohne JavaScript sinnvoll.
 
 ## Beim Übernehmen beachten
 
-- `action` und `method` zeigen im Katalog ins Leere. Im Zielprojekt auf den echten Endpunkt setzen.
+- `action` und `method` zeigen im Katalog ins Leere. Im Produktionsprojekt auf den echten Endpunkt setzen.
 - Die `name`-Attribute (`name`, `email`, `telefon`, `nachricht`, `einwilligung`) sind Platzhalter
   und müssen zu dem passen, was der Endpunkt erwartet.
 - Serverseitig validieren. `required` und `type="email"` sind Bedienkomfort im Browser, keine
   Prüfung. Ein abgeschickter Request kann jedes Feld leer oder beliebig gefüllt enthalten.
-- Der Fehlerzustand an der E-Mail ist ein fest verdrahtetes Beispiel. Im Zielprojekt werden
+- Der Fehlerzustand an der E-Mail ist ein fest verdrahtetes Beispiel. Im Produktionsprojekt werden
   `aria-invalid`, die Fehlermeldung und der eingetragene Wert servergerendert gesetzt, und zwar nur
   an den Feldern, die tatsächlich fehlerhaft sind.
 - Bei mehr als drei Feldern lohnt zusätzlich eine Fehlerübersicht oberhalb des Formulars, die auf

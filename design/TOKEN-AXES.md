@@ -9,7 +9,7 @@ zurückführen lassen. Man justiert vier Werte von Hand, findet es besser, und h
 kein System, sondern eine Sammlung Einzelfälle.
 
 Sechs Achsen mit drei bis vier Stufen erzeugen 972 Kombinationen — genug, um eine Richtung
-wirklich zu variieren, und jede davon ist ein sauberes Token-Set, das ins Zielprojekt umziehen kann.
+wirklich zu variieren, und jede davon ist ein sauberes Token-Set, das ins Produktionsprojekt umziehen kann.
 
 ## Die Achsen
 

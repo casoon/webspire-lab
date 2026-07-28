@@ -35,7 +35,7 @@ eine reine Preisdarstellung mit Aktionsbutton je Spalte ist `pricing` der passen
   sonst zeigen `scope="col"` und `scope="row"` auf falsche Bezüge.
 - `aria-label` am Scroll-Container muss die Tabelle benennen, nicht generisch "Tabelle" heißen.
   Bei zwei Tabellen auf einer Seite sind zwei unterschiedliche Labels nötig.
-- Der Container bekommt `tabindex="0"` nur, weil er scrollbar ist. Wenn im Zielprojekt kein
+- Der Container bekommt `tabindex="0"` nur, weil er scrollbar ist. Wenn im Produktionsprojekt kein
   Überlauf entstehen kann, entfallen `tabindex`, `role` und `aria-label` zusammen, sonst steht ein
   Fokusstopp ohne Funktion im Weg.
 - `whitespace-nowrap` erzwingt den Überlauf statt Umbruch in den Zellen. Bei langen Fließtexten in

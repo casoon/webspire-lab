@@ -1,7 +1,7 @@
 # @webspire/lab
 
 Werkstatt für Webdesign: Richtungen bauen, nebeneinander stellen, verwerfen, verfeinern.
-Was überzeugt, zieht als Code ins Zielprojekt um.
+Was überzeugt, zieht als Code ins Produktionsprojekt um.
 
 Der Ausgangspunkt ist eine einfache Beobachtung: Ein Modell, das einmal „bau eine moderne
 Premium-Landingpage" hört, liefert zuverlässig dasselbe zurück — Standard-Grotesk, blauvioletter

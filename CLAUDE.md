@@ -1,7 +1,7 @@
 # @webspire/lab
 
 Design-Lab und Vorlagen-Katalog. Hier entstehen Designrichtungen durch Bauen, Nebeneinanderstellen
-und Verwerfen — nicht durch einen guten Prompt. Was überzeugt, zieht als Code ins Zielprojekt um.
+und Verwerfen — nicht durch einen guten Prompt. Was überzeugt, zieht als Code ins Produktionsprojekt um.
 
 Das verbindliche Verfahren steht in `design/README.md`. Lies es, bevor du gestaltest.
 
@@ -64,7 +64,7 @@ pnpm test:shots     Screenshots für den visuellen Vergleich
 - `[[landing-and-site-builder]]` und `[[web-design-workflow]]` bauen Produktionsseiten. Hier
   entstehen Ausschnitte zum Vergleichen: Hero plus ein Inhaltsabschnitt, mehr nicht.
 - Kein SEO, kein i18n, keine Blog-Collections, kein Cloudflare-Adapter. Wer das braucht, ist
-  im Zielprojekt, nicht im Lab.
+  im Produktionsprojekt, nicht im Lab.
 - `[[astro-architecture]]` beschreibt v6. Collections- und Routing-API sind in v7 identisch,
   die Adapter- und Markdown-Teile nicht relevant.
 
