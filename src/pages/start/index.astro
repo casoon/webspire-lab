@@ -186,6 +186,13 @@ import Lab from '../../layouts/Lab.astro';
         const root = await fileSystemWindow.showDirectoryPicker({ mode: 'readwrite' });
         const config = await root.getDirectoryHandle('lab.config', { create: true });
         const projects = await config.getDirectoryHandle('projects', { create: true });
+        try {
+          await projects.getFileHandle(`${projectSlug}.json`);
+          status.textContent = `lab.config/projects/${projectSlug}.json existiert bereits. Andere Projektkennung wählen.`;
+          return;
+        } catch (error) {
+          if (!(error instanceof DOMException) || error.name !== 'NotFoundError') throw error;
+        }
         const file = await projects.getFileHandle(`${projectSlug}.json`, { create: true });
         const writer = await file.createWritable();
         await writer.write(content);
