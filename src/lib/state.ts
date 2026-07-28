@@ -57,6 +57,18 @@ interface Phase {
   note: string | null;
 }
 
+interface ProjectState {
+  slug: string;
+  title: string;
+  goal: string | null;
+  status: string | null;
+  directions: string[];
+  hasRun: boolean;
+  next: Step | null;
+  phases: Phase[];
+  updated: number;
+}
+
 function runSlugs() {
   return Object.keys(runIndexes)
     .map((path) => path.replace('/src/pages/lab/', '').replace('/index.astro', ''))
@@ -87,19 +99,28 @@ export async function labState() {
   const runs = runSlugs().map((slug) => ({ slug, directions: directionsOf(slug) }));
   const runBySlug = new Map(runs.map((run) => [run.slug, run]));
 
-  // Aktiv ist das zuletzt angefasste Briefing, das noch nicht übernommen wurde.
-  const openBriefs = briefs
-    .filter((brief) => brief.data.status !== 'shipped')
-    .sort((a, b) => b.data.updated.valueOf() - a.data.updated.valueOf());
-  const active = openBriefs[0] ?? null;
-  const activeRun = active ? runBySlug.get(active.id) : undefined;
-  const activeDirections = activeRun?.directions.length ?? 0;
+  const projects = [...new Set([...briefs.map((brief) => brief.id), ...runBySlug.keys()])]
+    .map((slug): ProjectState => {
+      const brief = briefs.find((entry) => entry.id === slug);
+      const directions = runBySlug.get(slug)?.directions ?? [];
+      const next = nextStep(slug, brief, directions.length);
+
+      return {
+        slug,
+        title: brief?.data.title ?? slug,
+        goal: brief?.data.goal ?? null,
+        status: brief?.data.status ?? null,
+        directions,
+        hasRun: runBySlug.has(slug),
+        next,
+        phases: buildPhases(next?.phase ?? null, brief, directions.length),
+        updated: brief?.data.updated.valueOf() ?? 0,
+      };
+    })
+    .sort((a, b) => b.updated - a.updated || a.slug.localeCompare(b.slug));
 
   const catalogFamilies = new Set(catalog.map((entry) => entry.data.family));
   const unchecked = catalog.filter((entry) => !entry.data.a11yChecked);
-
-  const next = nextStep();
-  const phases = buildPhases(next.phase);
 
   return {
     references: {
@@ -108,28 +129,27 @@ export async function labState() {
       liveShare: references.length ? Math.round((liveSites / references.length) * 100) : 0,
       missingCritical,
     },
-    briefs,
-    active,
-    runs,
-    activeDirections,
+    projects,
     catalog: {
       total: catalog.length,
       unchecked: unchecked.length,
       missingFamilies: CATALOG_FAMILY.filter((family) => !catalogFamilies.has(family)),
     },
-    next,
-    phases,
   };
 
-  function nextStep(): Step {
-    if (briefs.length === 0) {
+  function nextStep(
+    slug: string,
+    brief: (typeof briefs)[number] | undefined,
+    directionCount: number
+  ): Step | null {
+    if (!brief) {
       return {
         phase: 1,
-        title: 'Briefing anlegen',
-        action: 'Erstes Briefing schreiben: ein Ziel, eine primäre Aktion, echte Zielgruppe.',
-        why: 'Ohne Briefing ist jede spätere Bewertung Geschmackssache.',
+        title: 'Briefing zuordnen',
+        action: `Briefing für ${slug} anlegen: ein Ziel, eine primäre Aktion, echte Zielgruppe.`,
+        why: 'Ohne Briefing ist der vorhandene Vergleich nicht bewertbar.',
         command: '/design-brief',
-        target: 'design/briefs/<projekt>.md',
+        target: `design/briefs/${slug}.md`,
       };
     }
 
@@ -147,41 +167,41 @@ export async function labState() {
       };
     }
 
-    if (active && active.data.status === 'brief') {
+    if (brief.data.status === 'brief') {
       return {
         phase: 3,
         title: 'Gestaltungsrahmen ableiten',
-        action: `Teil 2 in ${active.id}.md ausfüllen: Richtung, Typografie, Farben, Layout, Bildsprache, Bewegung, Signatur.`,
+        action: `Teil 2 in ${slug}.md ausfüllen: Richtung, Typografie, Farben, Layout, Bildsprache, Bewegung, Signatur.`,
         why: 'Der Rahmen entsteht aus der Bibliothek, nicht aus dem Bauch. Ab dann ist er die Messlatte.',
         command: '/design-brief',
-        target: `design/briefs/${active.id}.md`,
+        target: `design/briefs/${slug}.md`,
       };
     }
 
-    if (active && activeDirections < DIRECTION_TARGET) {
-      const fehlen = DIRECTION_TARGET - activeDirections;
+    if (directionCount < DIRECTION_TARGET) {
+      const fehlen = DIRECTION_TARGET - directionCount;
       return {
         phase: 4,
         title: 'Richtungen bauen',
-        action: `Noch ${fehlen} Richtung${fehlen === 1 ? '' : 'en'} für ${active.id} bauen, alle mit demselben Inhalt und derselben primären Aktion.`,
+        action: `Noch ${fehlen} Richtung${fehlen === 1 ? '' : 'en'} für ${slug} bauen, alle mit demselben Inhalt und derselben primären Aktion.`,
         why: 'Fünf Richtungen nebeneinander. Einzeln wirkt fast jeder Entwurf überzeugend.',
         command: '/design-directions-lab',
-        target: `src/pages/lab/${active.id}/richtungen/`,
+        target: `src/pages/lab/${slug}/richtungen/`,
       };
     }
 
-    if (active && active.data.status === 'directions') {
+    if (brief.data.status === 'directions') {
       return {
         phase: 5,
         title: 'Vergleichen und entscheiden',
-        action: `/lab/${active.id}/ nebeneinander ansehen, eine Richtung wählen, daraus ${SUBVARIANT_TARGET} Untervarianten bauen.`,
+        action: `/lab/${slug}/ nebeneinander ansehen, eine Richtung wählen, daraus ${SUBVARIANT_TARGET} Untervarianten bauen.`,
         why: 'Nicht fünf neue Designs. Farbwelt und Typografie bleiben, variiert werden Aufbau, CTA-Position und Rhythmus.',
         command: '/design-directions-lab',
-        target: `design/briefs/${active.id}.md (Teil 3)`,
+        target: `design/briefs/${slug}.md (Teil 3)`,
       };
     }
 
-    if (active && active.data.status === 'refining') {
+    if (brief.data.status === 'refining') {
       return {
         phase: 8,
         title: 'Prüfen',
@@ -193,62 +213,40 @@ export async function labState() {
       };
     }
 
-    if (unchecked.length > 0) {
-      return {
-        phase: 6,
-        title: 'Katalog aufräumen',
-        action: `${unchecked.length} Baustein${unchecked.length === 1 ? '' : 'e'} ohne a11y-Prüfung: Tastatur, Kontrast und reduced-motion nachweisen oder auf draft setzen.`,
-        why: 'Ein Katalog aus ungeprüften Schnipseln ist eine Haftungsfalle, keine Hilfe.',
-        command: '/design-catalog-entry',
-        target: 'src/catalog/',
-      };
-    }
-
-    if (active && active.data.status === 'decided') {
+    if (brief.data.status === 'decided') {
       return {
         phase: 6,
         title: 'Übernehmen',
-        action: `Gewählte Richtung in das Zielprojekt überführen, wiederverwendbare Teile in den Katalog, ${active.id} auf shipped setzen.`,
+        action: `Gewählte Richtung in das Zielprojekt überführen, wiederverwendbare Teile in den Katalog, ${slug} auf shipped setzen.`,
         why: 'Was hier überzeugt, gehört ins Kundenprojekt. Das Lab ist keine Produktionsumgebung.',
         command: '/design-catalog-entry',
         target: 'src/catalog/',
       };
     }
 
-    if (catalog.length > 0 && CATALOG_FAMILY.some((family) => !catalogFamilies.has(family))) {
-      const missing = CATALOG_FAMILY.filter((family) => !catalogFamilies.has(family));
-      return {
-        phase: 6,
-        title: 'Katalog verbreitern',
-        action: `Bausteine für ${missing.slice(0, 3).join(', ')} ergänzen.`,
-        why: 'Formulare, Tabellen und Fehlerzustände sind die Screens, an denen generierte Designs scheitern. Nicht noch ein Hero.',
-        command: '/design-catalog-entry',
-        target: 'src/catalog/',
-      };
-    }
-
-    return {
-      phase: 1,
-      title: 'Nächstes Projekt',
-      action: 'Alle Läufe sind abgeschlossen. Neues Briefing anlegen.',
-      why: 'Nichts offen.',
-      command: '/design-brief',
-      target: 'design/briefs/<projekt>.md',
-    };
+    return null;
   }
 
-  function buildPhases(currentPhase: number): Phase[] {
+  function buildPhases(
+    currentPhase: number | null,
+    brief: (typeof briefs)[number] | undefined,
+    directionCount: number
+  ): Phase[] {
     const stateOf = (n: number): PhaseState =>
-      n === currentPhase ? 'current' : n < currentPhase ? 'done' : 'open';
+      currentPhase === null
+        ? 'done'
+        : n === currentPhase
+          ? 'current'
+          : n < currentPhase
+            ? 'done'
+            : 'open';
 
     return [
       {
         n: 1,
         title: 'Briefing',
         state: stateOf(1),
-        note: briefs.length
-          ? `${briefs.length} Briefing${briefs.length === 1 ? '' : 's'}${active ? `, aktiv: ${active.id}` : ''}`
-          : 'noch keins',
+        note: brief ? `Status: ${brief.data.status}` : 'fehlt',
       },
       {
         n: 2,
@@ -263,19 +261,19 @@ export async function labState() {
         n: 3,
         title: 'Gestaltungsrahmen',
         state: stateOf(3),
-        note: active ? `Status: ${active.data.status}` : null,
+        note: brief ? `Status: ${brief.data.status}` : null,
       },
       {
         n: 4,
         title: 'Fünf Richtungen',
-        state: activeDirections >= DIRECTION_TARGET ? 'done' : stateOf(4),
-        note: active ? `${activeDirections} von ${DIRECTION_TARGET} gebaut` : null,
+        state: directionCount >= DIRECTION_TARGET ? 'done' : stateOf(4),
+        note: `${directionCount} von ${DIRECTION_TARGET} gebaut`,
       },
       {
         n: 5,
         title: 'Wählen, drei Untervarianten',
         state: stateOf(5),
-        note: active?.data.chosenDirection ? `gewählt: ${active.data.chosenDirection}` : null,
+        note: brief?.data.chosenDirection ? `gewählt: ${brief.data.chosenDirection}` : null,
       },
       {
         n: 6,

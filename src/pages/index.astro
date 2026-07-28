@@ -3,70 +3,95 @@ import Lab from '../layouts/Lab.astro';
 import { labState } from '../lib/state';
 
 const state = await labState();
-const { next, phases, references, catalog, active, activeDirections } = state;
+const { projects, references, catalog } = state;
 
 const marker: Record<string, string> = { done: '✓', current: '▸', open: '·' };
 ---
 
 <Lab
   title="Design-Lab"
-  lead="Designrichtungen entstehen durch Bauen, Vergleichen und Verwerfen. Diese Seite sagt, was als Nächstes dran ist — das Verfahren steht in design/README.md."
+  lead="Designrichtungen entstehen durch Bauen, Vergleichen und Verwerfen. Der Stand jedes Projekts ist getrennt sichtbar — das Verfahren steht in design/README.md."
 >
-  <section aria-labelledby="next-step" class="border border-ink rounded-ds p-6">
-    <p class="text-micro text-muted uppercase tracking-wide">
-      Nächster Schritt — Phase {next.phase}
-    </p>
-    <h2 id="next-step" class="font-head text-h2 mt-1">{next.title}</h2>
-    <p class="measure mt-3">{next.action}</p>
-    <p class="measure mt-2 text-muted">{next.why}</p>
+  <section aria-labelledby="projects">
+    <div class="flex flex-wrap items-baseline justify-between gap-3">
+      <h2 id="projects" class="font-head text-h2">Projekte</h2>
+      <span class="text-micro text-muted tabular-nums">{projects.length} aktiv oder archiviert</span>
+    </div>
 
-    <dl class="mt-5 grid gap-2 sm:grid-cols-2">
-      {
-        next.command && (
-          <div class="flex gap-3">
-            <dt class="w-20 shrink-0 text-micro text-muted uppercase tracking-wide">Befehl</dt>
-            <dd><code>{next.command}</code></dd>
-          </div>
-        )
-      }
-      {
-        next.target && (
-          <div class="flex gap-3">
-            <dt class="w-20 shrink-0 text-micro text-muted uppercase tracking-wide">Ergebnis</dt>
-            <dd class="break-all"><code>{next.target}</code></dd>
-          </div>
-        )
-      }
-    </dl>
-  </section>
-
-  <h2 class="font-head text-h2 mt-14">Stand</h2>
-  <ol class="mt-4 divide-y divide-line border-y border-line">
     {
-      phases.map((phase) => (
-        <li class="flex flex-wrap items-baseline gap-x-3 gap-y-1 py-3">
-          <span
-            aria-hidden="true"
-            class:list={[
-              'w-4 shrink-0',
-              phase.state === 'current' ? 'text-accent' : 'text-muted',
-            ]}
-          >
-            {marker[phase.state]}
-          </span>
-          <span class="w-6 shrink-0 text-muted tabular-nums">{phase.n}</span>
-          <span class:list={[phase.state === 'open' ? 'text-muted' : '']}>
-            {phase.title}
-            {phase.state === 'current' && (
-              <span class="ml-2 text-micro text-accent uppercase tracking-wide">jetzt</span>
-            )}
-            {phase.state === 'done' && <span class="sr-only"> — erledigt</span>}
-          </span>
-          {phase.note && <span class="ml-auto text-micro text-muted">{phase.note}</span>}
-        </li>
-      ))
+      projects.length === 0 ? (
+        <div class="mt-4 border border-ink rounded-ds p-6">
+          <p class="text-micro text-muted uppercase tracking-wide">Erstes Projekt</p>
+          <h3 class="font-head text-h2 mt-1">Briefing anlegen</h3>
+          <p class="measure mt-3">Ein Ziel, eine primäre Aktion, echte Zielgruppe.</p>
+          <p class="measure mt-2 text-muted">
+            Danach erscheinen Projekt und nächster Schritt automatisch in dieser Übersicht.
+          </p>
+          <p class="mt-5"><code>/design-brief</code> → <code>design/briefs/&lt;projekt&gt;.md</code></p>
+        </div>
+      ) : (
+        <ol class="mt-4 grid gap-4 lg:grid-cols-2">
+          {
+            projects.map((project) => (
+              <li class="border border-line rounded-ds p-5">
+                <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                  <h3 class="font-head text-h3">
+                    {
+                      project.hasRun ? (
+                        <a href={`/lab/${project.slug}/`} class="underline-offset-4 hover:underline">
+                          {project.title}
+                        </a>
+                      ) : (
+                        project.title
+                      )
+                    }
+                  </h3>
+                  <span class="text-micro text-muted uppercase tracking-wide">
+                    {project.status ?? 'ohne Briefing'}
+                  </span>
+                </div>
+
+                {project.goal && <p class="measure mt-2 text-muted">{project.goal}</p>}
+
+                <ol class="mt-5 flex gap-1" aria-label={`Fortschritt ${project.title}`}>
+                  {
+                    project.phases.map((phase) => (
+                      <li
+                        class:list={[
+                          'grid size-6 place-items-center rounded-ds text-micro tabular-nums',
+                          phase.state === 'done' && 'bg-ink text-bg',
+                          phase.state === 'current' && 'bg-accent text-accent-ink',
+                          phase.state === 'open' && 'border border-line text-muted',
+                        ]}
+                        title={`Phase ${phase.n}: ${phase.title}${phase.note ? ` — ${phase.note}` : ''}`}
+                      >
+                        <span class="sr-only">Phase {phase.n}: {phase.title} — {phase.state}</span>
+                        <span aria-hidden="true">{marker[phase.state] === '·' ? phase.n : marker[phase.state]}</span>
+                      </li>
+                    ))
+                  }
+                </ol>
+
+                {project.next ? (
+                  <div class="mt-5 border-t border-line pt-4">
+                    <p class="text-micro text-muted uppercase tracking-wide">
+                      Nächster Schritt — Phase {project.next.phase}
+                    </p>
+                    <h4 class="font-head text-h3 mt-1">{project.next.title}</h4>
+                    <p class="measure mt-2">{project.next.action}</p>
+                    <p class="measure mt-2 text-muted">{project.next.why}</p>
+                    {project.next.command && <p class="mt-4"><code>{project.next.command}</code></p>}
+                  </div>
+                ) : (
+                  <p class="mt-5 border-t border-line pt-4 text-muted">Abgeschlossen und ins Zielprojekt übernommen.</p>
+                )}
+              </li>
+            ))
+          }
+        </ol>
+      )
     }
-  </ol>
+  </section>
 
   <h2 class="font-head text-h2 mt-14">Wo es klemmt</h2>
   <ul class="measure mt-3 space-y-2 text-muted">
@@ -95,12 +120,14 @@ const marker: Record<string, string> = { done: '✓', current: '▸', open: '·'
       )
     }
     {
-      active && activeDirections > 0 && activeDirections < 5 && (
-        <li>
-          {active.id} hat {activeDirections} Richtungen. Der Vergleich trägt erst ab fünf. →{' '}
-          <a href={`/lab/${active.id}/`} class="text-ink underline underline-offset-4">Vergleich</a>
-        </li>
-      )
+      projects
+        .filter((project) => project.directions.length > 0 && project.directions.length < 5)
+        .map((project) => (
+          <li>
+            {project.title} hat {project.directions.length} Richtungen. Der Vergleich trägt erst ab fünf. →{' '}
+            <a href={`/lab/${project.slug}/`} class="text-ink underline underline-offset-4">Vergleich</a>
+          </li>
+        ))
     }
     {
       catalog.unchecked > 0 && (

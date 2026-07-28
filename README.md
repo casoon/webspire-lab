@@ -29,6 +29,17 @@ Das geklonte Lab startet leer. Die vollständige Nordwerk-Referenz liegt getrenn
 [`examples/nordwerk/`](examples/nordwerk/), wird nicht gebaut und erscheint nicht als aktiver
 Kundenlauf.
 
+## Mehrere Projekte und Updates
+
+Ein Projekt besteht aus einem Briefing unter `design/briefs/<projekt>.md` und — sobald Richtungen
+entstehen — einem gleichnamigen Lauf unter `src/pages/lab/<projekt>/`. Die Startseite zeigt jeden
+Lauf mit seinem eigenen nächsten Schritt. Briefings und Referenzen sind Markdown mit validiertem
+Frontmatter: versionierbar, lesbar und ohne Datenbank. Der Katalog und die Referenzbibliothek
+gelten gemeinsam für alle Projekte im Lab.
+
+Wie ein geklontes Lab spätere Verbesserungen dieses Templates übernimmt, steht in
+[`UPDATES.md`](UPDATES.md).
+
 | Route | Inhalt |
 |-------|--------|
 | `/` | Ablauf und Stand |
