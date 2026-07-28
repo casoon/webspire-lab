@@ -14,7 +14,9 @@ lab.config/
 Konfiguration nie überschreiben; sie ergänzen bei Bedarf eine Migration. API-Schlüssel gehören
 nicht hierher, sondern ausschließlich in die lokale, ignorierte `.env.local`.
 
-Die Oberfläche unter `/start/` erstellt eine Projektdatei mit den Angaben für Phase 1. Die Felder
+Die Oberfläche unter `/start/` schreibt bei `pnpm dev` direkt nach `projects/`; der lokale
+Entwicklungsserver lässt keine Überschreibung einer bestehenden Projektdatei zu. Im statischen
+Build bleibt die Seite ohne Schreibzugriff und bietet den Browser-Download als Fallback. Die Felder
 `briefing` und `designFrame` werden anschließend im selben JSON ergänzt; sie bleiben absichtlich
 konfigurationsnah statt in einer Datenbank oder einem versteckten Browser-Speicher zu liegen.
 

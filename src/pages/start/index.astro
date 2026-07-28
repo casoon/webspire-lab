@@ -157,6 +157,26 @@ import Lab from '../../layouts/Lab.astro';
       },
     };
     const content = `${JSON.stringify(project, null, 2)}\n`;
+
+    try {
+      const localResponse = await fetch('/__lab/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: content,
+      });
+      if (localResponse.status === 201) {
+        status.textContent = `Gespeichert: lab.config/projects/${projectSlug}.json. Startseite wird geöffnet.`;
+        window.setTimeout(() => window.location.assign('/'), 500);
+        return;
+      }
+      if (localResponse.status === 409) {
+        status.textContent = `lab.config/projects/${projectSlug}.json existiert bereits. Andere Projektkennung wählen.`;
+        return;
+      }
+    } catch {
+      // Der statische Build hat keinen lokalen Schreibdienst und nutzt den Browser-Fallback.
+    }
+
     const fileSystemWindow = window as typeof window & {
       showDirectoryPicker?: (options: { mode: 'readwrite' }) => Promise<FileSystemDirectoryHandle>;
     };
@@ -185,6 +205,6 @@ import Lab from '../../layouts/Lab.astro';
     download.download = `${projectSlug}.json`;
     download.click();
     URL.revokeObjectURL(download.href);
-    status.textContent = `Datei geladen. Nach lab.config/projects/${projectSlug}.json verschieben und Seite neu laden.`;
+    status.textContent = `Datei geladen. Für direktes Speichern das Lab mit pnpm dev starten; sonst nach lab.config/projects/${projectSlug}.json verschieben.`;
   });
 </script>
