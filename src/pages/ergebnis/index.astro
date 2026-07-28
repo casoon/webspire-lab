@@ -1,0 +1,54 @@
+---
+import { getCollection } from 'astro:content';
+import Lab from '../../layouts/Lab.astro';
+import { getProjects } from '../../lib/projects';
+import { getReferences } from '../../lib/references';
+
+const projects = getProjects();
+const references = getReferences();
+const catalog = await getCollection('catalog', ({ data }) => !data.draft);
+const frameFields = [
+  'direction',
+  'typography',
+  'colors',
+  'layout',
+  'imagery',
+  'motion',
+  'signature',
+] as const;
+---
+
+<Lab title="Übergabe" lead="Das Ergebnis des Labs ist kein fertiger Webauftritt, sondern ein begründeter, überprüfbarer Arbeitsauftrag für das Produktionsprojekt.">
+  {
+    projects.length === 0 ? (
+      <p class="measure text-muted">Noch kein Projekt. Mit einem Projektbrief beginnt auch die spätere Übergabe.</p>
+    ) : (
+      <div class="space-y-12">
+        {projects.map((project) => {
+          const missing = frameFields.filter((field) => !project.designFrame[field].trim());
+          const ready = missing.length === 0 && Boolean(project.chosenDirection);
+          return (
+            <article class="border border-line rounded-ds p-6">
+              <div class="flex flex-wrap items-baseline justify-between gap-3">
+                <h2 class="font-head text-h2">{project.title}</h2>
+                <span class={ready ? 'text-ink' : 'text-muted'}>{ready ? 'übergabebereit' : 'noch offen'}</span>
+              </div>
+              <p class="measure mt-3">{project.goal}</p>
+              <dl class="mt-6 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+                <div><dt class="text-micro text-muted uppercase tracking-wide">Haupt-CTA</dt><dd class="mt-1">{project.ctas.primary || 'keine'}</dd></div>
+                <div><dt class="text-micro text-muted uppercase tracking-wide">Sekundäre CTAs</dt><dd class="mt-1">{project.ctas.secondary.join(' · ') || 'keine'}</dd></div>
+                <div><dt class="text-micro text-muted uppercase tracking-wide">Gewählte Richtung</dt><dd class="mt-1">{project.chosenDirection || 'noch nicht gewählt'}</dd></div>
+                <div><dt class="text-micro text-muted uppercase tracking-wide">Bibliothek</dt><dd class="mt-1">{references.length} Referenzen, {catalog.length} Katalogbausteine</dd></div>
+              </dl>
+              {ready ? (
+                <div class="mt-8 border-t border-line pt-5"><h3 class="font-head text-h3">Designrahmen</h3><ul class="mt-3 space-y-2 text-muted">{frameFields.map((field) => <li><span class="text-ink">{field}:</span> {project.designFrame[field]}</li>)}</ul></div>
+              ) : (
+                <p class="mt-8 border-t border-line pt-5 text-muted">Für die Übergabe fehlen: {missing.length ? missing.join(', ') : ''}{missing.length && !project.chosenDirection ? ' und ' : ''}{!project.chosenDirection ? 'gewählte Richtung' : ''}.</p>
+              )}
+            </article>
+          );
+        })}
+      </div>
+    )
+  }
+</Lab>

@@ -5,9 +5,6 @@ import { z } from 'astro/zod';
 /**
  * Drei Collections, drei Zwecke:
  *
- *   references — die Inspirationsbibliothek (Phase 2). Liegt unter design/,
- *                weil sie von Hand gepflegt und gelesen wird, nicht generiert.
- *   briefs     — Briefing + Gestaltungsrahmen je Projekt (Phase 1 + 3).
  *   catalog    — der Vorlagen-Katalog: kuratierte, geprüfte Bausteine (Phase 6).
  *
  * Die Merkmals-Vokabulare (DIRECTIONS, TYPE_VOICE, …) sind absichtlich
@@ -27,19 +24,6 @@ export const DIRECTIONS = [
   'content-first',
   'brand-first',
 ] as const;
-
-const TYPE_VOICE = ['serif-display', 'sans-neutral', 'grotesk-bold', 'mono', 'mixed'] as const;
-
-const LAYOUT_KIND = [
-  'grid-12',
-  'asymmetric',
-  'single-column',
-  'split',
-  'broadsheet',
-  'canvas',
-] as const;
-
-const SURFACE_KIND = ['flat', 'bordered', 'cards', 'layered', 'full-bleed'] as const;
 
 export const CATALOG_FAMILY = [
   'hero',
@@ -76,29 +60,6 @@ const axes = z.object({
   motion: z.enum(['none', 'subtle', 'expressive']).default(DEFAULT_AXES.motion),
 });
 
-const references = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './design/references' }),
-  schema: z.object({
-    /** Mitgelieferte Vorlage: validieren, aber nirgends als Referenz anzeigen. */
-    template: z.boolean().default(false),
-    title: z.string().min(1),
-    /** Reale Website schlägt Dribbble-Shot. Siehe design/README.md, Phase 2. */
-    sourceType: z.enum(['live-site', 'shot', 'print', 'app', 'other']),
-    url: z.url().optional(),
-    captured: z.coerce.date(),
-    direction: z.array(z.enum(DIRECTIONS)).min(1),
-    typeVoice: z.enum(TYPE_VOICE),
-    layout: z.enum(LAYOUT_KIND),
-    surface: z.enum(SURFACE_KIND),
-    /** Was genau übernommen werden soll — nicht "sieht gut aus". */
-    takeaway: z.string().min(20),
-    /** Screenshot relativ zu design/references/screenshots/ */
-    screenshot: z.string().optional(),
-    /** Screens jenseits des Heros. Eine Bibliothek nur aus Heros ist wertlos. */
-    covers: z.array(z.enum(CATALOG_FAMILY)).default([]),
-  }),
-});
-
 const catalog = defineCollection({
   loader: glob({
     pattern: '**/entry.md',
@@ -123,4 +84,4 @@ const catalog = defineCollection({
   }),
 });
 
-export const collections = { references, catalog };
+export const collections = { catalog };

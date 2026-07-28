@@ -52,6 +52,51 @@ function localProjectWriter() {
           );
         }
       });
+
+      server.middlewares.use('/__lab/references', async (request, response) => {
+        if (request.method !== 'POST') {
+          response.writeHead(405, { Allow: 'POST' }).end();
+          return;
+        }
+
+        try {
+          const chunks = [];
+          for await (const chunk of request) chunks.push(chunk);
+          const reference = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+          const slug = typeof reference?.slug === 'string' ? reference.slug : '';
+          if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+            response.writeHead(400).end(JSON.stringify({ error: 'Ungültige Referenzkennung.' }));
+            return;
+          }
+
+          const references = resolve(server.config.root, 'lab.config/references');
+          const target = resolve(references, `${slug}.json`);
+          if (!target.startsWith(`${references}/`)) {
+            response.writeHead(400).end(JSON.stringify({ error: 'Ungültiger Dateipfad.' }));
+            return;
+          }
+
+          await mkdir(references, { recursive: true });
+          await writeFile(target, `${JSON.stringify(reference, null, 2)}\n`, {
+            encoding: 'utf8',
+            flag: 'wx',
+          });
+          server.ws.send({ type: 'full-reload', path: '*' });
+          response
+            .writeHead(201, { 'Content-Type': 'application/json' })
+            .end(JSON.stringify({ ok: true }));
+        } catch (error) {
+          const exists =
+            error && typeof error === 'object' && 'code' in error && error.code === 'EEXIST';
+          response.writeHead(exists ? 409 : 500, { 'Content-Type': 'application/json' }).end(
+            JSON.stringify({
+              error: exists
+                ? 'Referenzdatei existiert bereits.'
+                : 'Referenzdatei konnte nicht gespeichert werden.',
+            })
+          );
+        }
+      });
     },
   };
 }

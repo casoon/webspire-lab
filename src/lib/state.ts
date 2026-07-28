@@ -1,6 +1,7 @@
 import { getCollection } from 'astro:content';
 import { CATALOG_FAMILY } from '../content.config';
 import { getProjects, type Project } from './projects';
+import { getReferences } from './references';
 
 /**
  * Zustand des Labs, aus den vorhandenen Artefakten abgeleitet.
@@ -85,15 +86,12 @@ function directionsOf(runSlug: string) {
 }
 
 export async function labState() {
-  const [allReferences, catalog] = await Promise.all([
-    getCollection('references'),
-    getCollection('catalog', ({ data }) => !data.draft),
-  ]);
-  const references = allReferences.filter((reference) => !reference.data.template);
+  const [catalog] = await Promise.all([getCollection('catalog', ({ data }) => !data.draft)]);
+  const references = getReferences();
   const briefs = getProjects();
 
-  const liveSites = references.filter((ref) => ref.data.sourceType === 'live-site').length;
-  const coveredByReferences = new Set(references.flatMap((ref) => ref.data.covers));
+  const liveSites = references.filter((ref) => ref.sourceType === 'live-site').length;
+  const coveredByReferences = new Set(references.flatMap((ref) => ref.covers));
   const missingCritical = CRITICAL_FAMILIES.filter((family) => !coveredByReferences.has(family));
 
   const runs = runSlugs().map((slug) => ({ slug, directions: directionsOf(slug) }));

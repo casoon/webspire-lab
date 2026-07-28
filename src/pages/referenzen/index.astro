@@ -1,27 +1,24 @@
 ---
-import { getCollection } from 'astro:content';
-import { CATALOG_FAMILY, DIRECTIONS } from '../../content.config';
+import { CATALOG_FAMILY } from '../../content.config';
 import Lab from '../../layouts/Lab.astro';
+import { getReferences, REFERENCE_DIRECTIONS } from '../../lib/references';
 
-const references = (await getCollection('references'))
-  .filter((reference) => !reference.data.template)
-  .sort((a, b) => b.data.captured.valueOf() - a.data.captured.valueOf());
+const references = getReferences();
 
-const byDirection = DIRECTIONS.map((direction) => ({
+const byDirection = REFERENCE_DIRECTIONS.map((direction) => ({
   direction,
-  count: references.filter((ref) => ref.data.direction.includes(direction)).length,
+  count: references.filter((ref) => ref.direction.includes(direction)).length,
 }));
 
 // Deckungslücke sichtbar machen: Bibliotheken kippen sonst zu reinen Hero-Sammlungen.
 const coverage = CATALOG_FAMILY.map((family) => ({
   family,
-  count: references.filter((ref) => ref.data.covers.includes(family)).length,
+  count: references.filter((ref) => ref.covers.includes(family)).length,
 }));
 
 const liveShare = references.length
   ? Math.round(
-      (references.filter((ref) => ref.data.sourceType === 'live-site').length / references.length) *
-        100
+      (references.filter((ref) => ref.sourceType === 'live-site').length / references.length) * 100
     )
   : 0;
 
@@ -38,6 +35,9 @@ const sourceLabel: Record<string, string> = {
   title="Referenzen"
   lead="Die eigene Inspirationsbibliothek. Nicht „diese Seite nachbauen“, sondern „diese Eigenschaft übernehmen“ — deshalb ist das Merkmal wichtiger als das Bild."
 >
+  <p class="mb-8">
+    <a href="/referenzen/neu/" class="inline-flex bg-accent px-4 py-2 text-accent-ink rounded-ds">Referenz erfassen</a>
+  </p>
   <div class="grid gap-4 sm:grid-cols-3">
     <p class="border border-line rounded-ds p-4">
       <span class="block font-head text-h1 tabular-nums">{references.length}</span>
@@ -96,21 +96,21 @@ const sourceLabel: Record<string, string> = {
         {references.map((ref) => (
           <li class="border border-line rounded-ds p-5">
             <h3 class="font-head text-h3">
-              {ref.data.url ? (
-                <a href={ref.data.url} rel="noreferrer" class="underline-offset-4 hover:underline">
-                  {ref.data.title}
+              {ref.url ? (
+                <a href={ref.url} rel="noreferrer" class="underline-offset-4 hover:underline">
+                  {ref.title}
                 </a>
               ) : (
-                ref.data.title
+                ref.title
               )}
             </h3>
             <p class="mt-1 text-micro text-muted uppercase tracking-wide">
-              {sourceLabel[ref.data.sourceType]} · {ref.data.typeVoice} · {ref.data.layout} · {ref.data.surface}
+              {sourceLabel[ref.sourceType]} · {ref.typeVoice} · {ref.layout} · {ref.surface}
             </p>
-            <p class="measure mt-3">{ref.data.takeaway}</p>
+            <p class="measure mt-3">{ref.takeaway}</p>
             <p class="mt-2 text-micro text-muted">
-              {ref.data.direction.join(' · ')}
-              {ref.data.covers.length > 0 && <> — zeigt: {ref.data.covers.join(', ')}</>}
+              {ref.direction.join(' · ')}
+              {ref.covers.length > 0 && <> — zeigt: {ref.covers.join(', ')}</>}
             </p>
           </li>
         ))}
