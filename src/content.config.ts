@@ -99,27 +99,6 @@ const references = defineCollection({
   }),
 });
 
-const briefs = defineCollection({
-  loader: glob({
-    pattern: '{briefs/**/*.md,BRIEFING.template.md}',
-    base: './design',
-  }),
-  schema: z.object({
-    /** Mitgelieferte Vorlage: validieren, aber nirgends als Briefing anzeigen. */
-    template: z.boolean().default(false),
-    title: z.string().min(1),
-    client: z.string().min(1),
-    goal: z.string().min(10),
-    primaryAction: z.string().min(3),
-    audience: z.string().min(10),
-    status: z.enum(['brief', 'directions', 'refining', 'decided', 'shipped']),
-    updated: z.coerce.date(),
-    /** Gewählte Leitrichtung — erst ab status "decided" gesetzt. */
-    chosenDirection: z.string().optional(),
-    constraints: z.array(z.string()).default([]),
-  }),
-});
-
 const catalog = defineCollection({
   loader: glob({
     pattern: '**/entry.md',
@@ -144,4 +123,4 @@ const catalog = defineCollection({
   }),
 });
 
-export const collections = { references, briefs, catalog };
+export const collections = { references, catalog };

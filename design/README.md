@@ -14,7 +14,7 @@ diesem Repo kommen.
 
 | # | Phase | Ergebnis liegt in | Skill |
 |---|-------|-------------------|-------|
-| 1 | Briefing | `design/briefs/<projekt>.md` | `/design-brief` |
+| 1 | Briefing | `lab.config/projects/<projekt>.json` | `/design-brief` |
 | 2 | Referenzen sammeln | `design/references/` | `/inspiration-capture` |
 | 3 | Gestaltungsrahmen | derselbe Brief, Abschnitt 2 | `/design-brief` |
 | 4 | Fünf Richtungen bauen | `src/pages/lab/<projekt>/richtungen/` | `/design-directions-lab` |
@@ -27,7 +27,8 @@ diesem Repo kommen.
 
 ## Phase 1 — Briefing
 
-Ohne Briefing ist jede Bewertung Geschmackssache. Vorlage: `design/BRIEFING.template.md`.
+Ohne Briefing ist jede Bewertung Geschmackssache. Ein neues Projekt wird lokal unter `/start/`
+angelegt; Vorlage und Schema liegen in `lab.config/templates/project.json`.
 
 Pflichtangaben: Produkt, Ziel der Seite, **eine** primäre Aktion, Zielgruppe samt Vorwissen,
 Inhalte, technische Basis, Randbedingungen.
@@ -56,8 +57,8 @@ Nicht "sieht gut aus". Nicht "diese Seite nachbauen".
 ## Phase 3 — Gestaltungsrahmen
 
 Aus der Bibliothek wird ein kurzer, verbindlicher Rahmen: ästhetische Richtung, Typografie,
-Farben, Layout, Bildsprache, Bewegung. Er steht im selben Brief und ist ab hier die Messlatte —
-auch gegen den eigenen späteren Geschmack.
+Farben, Layout, Bildsprache, Bewegung. Er steht im Feld `designFrame` derselben Projektdatei und
+ist ab hier die Messlatte — auch gegen den eigenen späteren Geschmack.
 
 Die Leitrichtung wird bewusst gewählt, nicht geerbt. Taxonomie und Auswahlheuristik:
 `[[design-directions]]`.
@@ -136,8 +137,8 @@ Was Tests nicht finden, findet `/slop-review`. Was der nicht findet, findet nur 
 | `README.md` | dieses Verfahren |
 | `ANTI-PATTERNS.md` | Regelkatalog mit IDs, gegen den geprüft wird |
 | `TOKEN-AXES.md` | die sechs Achsen und warum es Stufen statt Regler sind |
-| `BRIEFING.template.md` | Vorlage für Phase 1 und 3 |
-| `briefs/<projekt>.md` | ausgefülltes Briefing je Projekt |
+| `lab.config/templates/project.json` | Vorlage und Schema für Phase 1 und 3 |
+| `lab.config/projects/<projekt>.json` | ausgefülltes Briefing je Projekt |
 | `references/*.md` | Inspirationsbibliothek |
 
 Barrierefreiheits-Patterns stehen bewusst **nicht** hier, sondern in `[[accessibility-audit]]`.

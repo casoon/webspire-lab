@@ -1,5 +1,6 @@
 import { getCollection } from 'astro:content';
 import { CATALOG_FAMILY } from '../content.config';
+import { getProjects, type Project } from './projects';
 
 /**
  * Zustand des Labs, aus den vorhandenen Artefakten abgeleitet.
@@ -84,13 +85,12 @@ function directionsOf(runSlug: string) {
 }
 
 export async function labState() {
-  const [allReferences, allBriefs, catalog] = await Promise.all([
+  const [allReferences, catalog] = await Promise.all([
     getCollection('references'),
-    getCollection('briefs'),
     getCollection('catalog', ({ data }) => !data.draft),
   ]);
   const references = allReferences.filter((reference) => !reference.data.template);
-  const briefs = allBriefs.filter((brief) => !brief.data.template);
+  const briefs = getProjects();
 
   const liveSites = references.filter((ref) => ref.data.sourceType === 'live-site').length;
   const coveredByReferences = new Set(references.flatMap((ref) => ref.data.covers));
@@ -99,22 +99,22 @@ export async function labState() {
   const runs = runSlugs().map((slug) => ({ slug, directions: directionsOf(slug) }));
   const runBySlug = new Map(runs.map((run) => [run.slug, run]));
 
-  const projects = [...new Set([...briefs.map((brief) => brief.id), ...runBySlug.keys()])]
+  const projects = [...new Set([...briefs.map((brief) => brief.slug), ...runBySlug.keys()])]
     .map((slug): ProjectState => {
-      const brief = briefs.find((entry) => entry.id === slug);
+      const brief = briefs.find((entry) => entry.slug === slug);
       const directions = runBySlug.get(slug)?.directions ?? [];
       const next = nextStep(slug, brief, directions.length);
 
       return {
         slug,
-        title: brief?.data.title ?? slug,
-        goal: brief?.data.goal ?? null,
-        status: brief?.data.status ?? null,
+        title: brief?.title ?? slug,
+        goal: brief?.goal ?? null,
+        status: brief?.status ?? null,
         directions,
         hasRun: runBySlug.has(slug),
         next,
         phases: buildPhases(next?.phase ?? null, brief, directions.length),
-        updated: brief?.data.updated.valueOf() ?? 0,
+        updated: brief ? Date.parse(brief.updatedAt) : 0,
       };
     })
     .sort((a, b) => b.updated - a.updated || a.slug.localeCompare(b.slug));
@@ -137,11 +137,7 @@ export async function labState() {
     },
   };
 
-  function nextStep(
-    slug: string,
-    brief: (typeof briefs)[number] | undefined,
-    directionCount: number
-  ): Step | null {
+  function nextStep(slug: string, brief: Project | undefined, directionCount: number): Step | null {
     if (!brief) {
       return {
         phase: 1,
@@ -149,7 +145,7 @@ export async function labState() {
         action: `Briefing für ${slug} anlegen: ein Ziel, eine primäre Aktion, echte Zielgruppe.`,
         why: 'Ohne Briefing ist der vorhandene Vergleich nicht bewertbar.',
         command: '/design-brief',
-        target: `design/briefs/${slug}.md`,
+        target: `lab.config/projects/${slug}.json`,
       };
     }
 
@@ -167,14 +163,14 @@ export async function labState() {
       };
     }
 
-    if (brief.data.status === 'brief') {
+    if (brief.status === 'brief') {
       return {
         phase: 3,
         title: 'Gestaltungsrahmen ableiten',
-        action: `Teil 2 in ${slug}.md ausfüllen: Richtung, Typografie, Farben, Layout, Bildsprache, Bewegung, Signatur.`,
+        action: `Gestaltungsrahmen in ${slug}.json ausfüllen: Richtung, Typografie, Farben, Layout, Bildsprache, Bewegung, Signatur.`,
         why: 'Der Rahmen entsteht aus der Bibliothek, nicht aus dem Bauch. Ab dann ist er die Messlatte.',
         command: '/design-brief',
-        target: `design/briefs/${slug}.md`,
+        target: `lab.config/projects/${slug}.json`,
       };
     }
 
@@ -190,18 +186,18 @@ export async function labState() {
       };
     }
 
-    if (brief.data.status === 'directions') {
+    if (brief.status === 'directions') {
       return {
         phase: 5,
         title: 'Vergleichen und entscheiden',
         action: `/lab/${slug}/ nebeneinander ansehen, eine Richtung wählen, daraus ${SUBVARIANT_TARGET} Untervarianten bauen.`,
         why: 'Nicht fünf neue Designs. Farbwelt und Typografie bleiben, variiert werden Aufbau, CTA-Position und Rhythmus.',
         command: '/design-directions-lab',
-        target: `design/briefs/${slug}.md (Teil 3)`,
+        target: `lab.config/projects/${slug}.json`,
       };
     }
 
-    if (brief.data.status === 'refining') {
+    if (brief.status === 'refining') {
       return {
         phase: 8,
         title: 'Prüfen',
@@ -213,7 +209,7 @@ export async function labState() {
       };
     }
 
-    if (brief.data.status === 'decided') {
+    if (brief.status === 'decided') {
       return {
         phase: 6,
         title: 'Übernehmen',
@@ -229,7 +225,7 @@ export async function labState() {
 
   function buildPhases(
     currentPhase: number | null,
-    brief: (typeof briefs)[number] | undefined,
+    brief: Project | undefined,
     directionCount: number
   ): Phase[] {
     const stateOf = (n: number): PhaseState =>
@@ -246,7 +242,7 @@ export async function labState() {
         n: 1,
         title: 'Briefing',
         state: stateOf(1),
-        note: brief ? `Status: ${brief.data.status}` : 'fehlt',
+        note: brief ? `Status: ${brief.status}` : 'fehlt',
       },
       {
         n: 2,
@@ -261,7 +257,7 @@ export async function labState() {
         n: 3,
         title: 'Gestaltungsrahmen',
         state: stateOf(3),
-        note: brief ? `Status: ${brief.data.status}` : null,
+        note: brief ? `Status: ${brief.status}` : null,
       },
       {
         n: 4,
@@ -273,7 +269,7 @@ export async function labState() {
         n: 5,
         title: 'Wählen, drei Untervarianten',
         state: stateOf(5),
-        note: brief?.data.chosenDirection ? `gewählt: ${brief.data.chosenDirection}` : null,
+        note: brief?.chosenDirection ? `gewählt: ${brief.chosenDirection}` : null,
       },
       {
         n: 6,

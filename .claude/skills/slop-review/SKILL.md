@@ -29,8 +29,8 @@ dann — in einem eigenen Durchgang — die Änderungen.
 3. **`JUDGE-*`-Regeln** aus `design/ANTI-PATTERNS.md` durchgehen, in der Reihenfolge des Katalogs.
    Die Reihenfolge ist die Prüfliste — nicht selektiv das prüfen, was auffällt.
 4. **`COPY-*`-Regeln** auf die sichtbaren Texte des Screens anwenden.
-5. **Abgleich gegen den Brief** (`design/briefs/<projekt>.md`): Hält der Entwurf den Gestaltungsrahmen
-   aus Teil 2 ein? Ist die dort benannte Signatur im Bild erkennbar? Ist die primäre Aktion die
+5. **Abgleich gegen den Brief** (`lab.config/projects/<projekt>.json`): Hält der Entwurf den Gestaltungsrahmen
+   aus `designFrame` ein? Ist die dort benannte Signatur im Bild erkennbar? Ist die primäre Aktion die
    auffälligste Handlung auf dem Screen?
 6. **Abschlussfrage** — eigener Schritt, siehe unten.
 

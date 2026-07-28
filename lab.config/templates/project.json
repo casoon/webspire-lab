@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "slug": "mein-projekt",
+  "title": "Titel des Projekts",
+  "client": "Organisation oder Kunde",
+  "goal": "Ein konkretes Ziel der Seite.",
+  "primaryAction": "Eine primäre Aktion",
+  "audience": "Zielgruppe mit Vorwissen und Situation.",
+  "status": "brief",
+  "createdAt": "2026-07-28T00:00:00.000Z",
+  "updatedAt": "2026-07-28T00:00:00.000Z",
+  "constraints": [],
+  "briefing": {
+    "product": "Produkt oder Angebot.",
+    "content": "Verfügbare Inhalte und Belege.",
+    "technicalBasis": "Technischer Rahmen und vorhandenes System."
+  },
+  "designFrame": {
+    "direction": "",
+    "typography": "",
+    "colors": "",
+    "layout": "",
+    "imagery": "",
+    "motion": "",
+    "signature": "",
+    "exceptions": ""
+  }
+}

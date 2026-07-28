@@ -16,11 +16,12 @@ pnpm dev
 ## Als Template starten
 
 Das Repository ist als GitHub-Template gedacht: **Use this template** wählen, das neue Repository
-klonen und darin arbeiten. Es gibt bewusst keinen Installer — ein neuer Lauf braucht zuerst ein
-inhaltliches Briefing, nicht einen weiteren Generator.
+klonen und darin arbeiten. Es gibt bewusst keinen Installer — ein neuer Lauf braucht zuerst einen
+inhaltlichen Auftrag, nicht einen weiteren Generator.
 
-1. `design/BRIEFING.template.md` nach `design/briefs/<projekt>.md` kopieren, `template: true`
-   entfernen und vollständig ausfüllen.
+1. Lokal `pnpm dev` starten und unter `/start/` ein Projekt anlegen. Die Oberfläche erzeugt
+   `lab.config/projects/<projekt>.json`; wenn der Browser keinen Ordnerzugriff erlaubt, lädt sie
+   die Datei zum Verschieben herunter.
 2. Referenzen in `design/references/` erfassen; bei einer kopierten Vorlage ebenso `template: true`
    entfernen.
 3. Erst dann `src/pages/lab/<projekt>/richtungen/` für die Vergleichsseiten anlegen.
@@ -31,11 +32,12 @@ Kundenlauf.
 
 ## Mehrere Projekte und Updates
 
-Ein Projekt besteht aus einem Briefing unter `design/briefs/<projekt>.md` und — sobald Richtungen
-entstehen — einem gleichnamigen Lauf unter `src/pages/lab/<projekt>/`. Die Startseite zeigt jeden
-Lauf mit seinem eigenen nächsten Schritt. Briefings und Referenzen sind Markdown mit validiertem
-Frontmatter: versionierbar, lesbar und ohne Datenbank. Der Katalog und die Referenzbibliothek
-gelten gemeinsam für alle Projekte im Lab.
+Ein Projekt besteht aus einer JSON-Datei unter `lab.config/projects/<projekt>.json` und — sobald
+Richtungen entstehen — einem gleichnamigen Lauf unter `src/pages/lab/<projekt>/`. Die Startseite
+zeigt jeden Lauf mit seinem eigenen nächsten Schritt. Projektdateien und Referenzen sind
+versionierbar, lesbar und ohne Datenbank; die Projektdatei ist die einzige Quelle für den
+Arbeitsauftrag und den Gestaltungsrahmen. Der Katalog und die Referenzbibliothek gelten gemeinsam
+für alle Projekte im Lab.
 
 Wie ein geklontes Lab spätere Verbesserungen dieses Templates übernimmt, steht in
 [`UPDATES.md`](UPDATES.md).
@@ -43,6 +45,7 @@ Wie ein geklontes Lab spätere Verbesserungen dieses Templates übernimmt, steht
 | Route | Inhalt |
 |-------|--------|
 | `/` | Ablauf und Stand |
+| `/start/` | Projekt lokal anlegen |
 | `/lab/` | Läufe je Projekt, jeder mit Vergleichsseite |
 | `/katalog/` | geprüfte Bausteine zum Kopieren |
 | `/referenzen/` | Inspirationsbibliothek mit Merkmalen und Deckungsanzeige |

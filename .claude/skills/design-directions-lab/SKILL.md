@@ -17,7 +17,7 @@ aus dem Brief ziehen und in allen fünf Richtungen wortgleich einsetzen.
 
 ## Voraussetzung
 
-`design/briefs/<projekt>.md` existiert und Teil 2 (Gestaltungsrahmen, Phase 3) ist ausgefüllt.
+`lab.config/projects/<projekt>.json` existiert und `designFrame` (Gestaltungsrahmen, Phase 3) ist ausgefüllt.
 Fehlt das, nicht anfangen, sondern → [[design-brief]]. Ohne Rahmen endet der Vergleich in Geschmack.
 
 ## Dateilayout

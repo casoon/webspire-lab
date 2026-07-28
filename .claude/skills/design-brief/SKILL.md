@@ -1,6 +1,6 @@
 ---
 name: design-brief
-description: Führt Phase 1 (Briefing) und Phase 3 (Gestaltungsrahmen) durch und legt `design/briefs/<slug>.md` an. Nutzen, wenn ein Designlauf startet oder der Rahmen aus der Referenzbibliothek abgeleitet wird. NICHT für Copy-Überarbeitung (→ [[anti-ai-copy]]) oder für die Umsetzung einer Produktionsseite (→ [[landing-and-site-builder]]).
+description: Führt Phase 1 (Briefing) und Phase 3 (Gestaltungsrahmen) durch und pflegt `lab.config/projects/<slug>.json`. Nutzen, wenn ein Designlauf startet oder der Rahmen aus der Referenzbibliothek abgeleitet wird. NICHT für Copy-Überarbeitung (→ [[anti-ai-copy]]) oder für die Umsetzung einer Produktionsseite (→ [[landing-and-site-builder]]).
 ---
 # Design-Brief
 
@@ -25,28 +25,28 @@ Vorschlagen ist erlaubt, solange es als Vorschlag markiert ist und bestätigt wi
 
 ## Ablauf
 
-1. Vorlage `design/BRIEFING.template.md` nach `design/briefs/<slug>.md` kopieren. Slug kebab-case, kurz.
-2. Teil 1 mit dem füllen, was tatsächlich gesagt wurde. Lücken sammeln und **in einem Block** rückfragen, nicht einzeln.
-3. `status: brief` setzen, `updated` auf heute. Hier stoppen und an `/inspiration-capture` übergeben.
-4. Erst wenn 15–30 Referenzen liegen: Teil 2 ergänzen, `status: directions`.
+1. Projekt über `/start/` anlegen oder `lab.config/templates/project.json` nach `lab.config/projects/<slug>.json` kopieren. Slug kebab-case, kurz.
+2. Teil 1 in den Top-Level-Feldern sowie `briefing` mit dem füllen, was tatsächlich gesagt wurde. Lücken sammeln und **in einem Block** rückfragen, nicht einzeln.
+3. `status: "brief"` setzen, `updatedAt` auf jetzt. Hier stoppen und an `/inspiration-capture` übergeben.
+4. Erst wenn 15–30 Referenzen liegen: `designFrame` ergänzen, `status: "directions"`.
 
-## Frontmatter
+## Projektdatei
 
-Schema aus `src/content.config.ts`. Ein Verstoß bricht `pnpm build`.
+Schema aus `lab.config/templates/project.json`. Ein Verstoß blendet das Projekt im Lab aus und
+bricht die inhaltliche Prüfung.
 
-```yaml
----
-title: 'Relaunch Startseite'      # min 1
-client: 'Beispiel GmbH'           # min 1
-goal: 'Erstkontakt zu …'          # min 10 Zeichen
-primaryAction: 'Termin buchen'    # min 3 Zeichen, genau eine Aktion
-audience: 'Bauleiter, die …'      # min 10 Zeichen
-status: brief                     # brief | directions | refining | decided | shipped
-updated: 2026-07-27
-chosenDirection: 'editorial'      # optional, erst ab status "decided"
-constraints:                      # optional, default []
-  - 'Bestandslogo bleibt'
----
+```json
+{
+  "title": "Relaunch Startseite",
+  "client": "Beispiel GmbH",
+  "goal": "Erstkontakt zu …",
+  "primaryAction": "Termin buchen",
+  "audience": "Bauleiter, die …",
+  "status": "brief",
+  "updatedAt": "2026-07-28T12:00:00.000Z",
+  "chosenDirection": "editorial",
+  "constraints": ["Bestandslogo bleibt"]
+}
 ```
 
 ## Teil 2 aus der Bibliothek ableiten
@@ -72,7 +72,7 @@ Pflichtabschnitte, ohne die Teil 2 nicht fertig ist:
 
 ## Output
 
-- Datei: `design/briefs/<slug>.md`, sonst nichts.
+- Datei: `lab.config/projects/<slug>.json`, sonst nichts.
 - Nach Teil 1: `status: brief`, offene Rückfragen als Liste in der Antwort. Nächster Schritt `/inspiration-capture`.
 - Nach Teil 2: `status: directions`, `updated` neu. Nächster Schritt `/design-directions-lab`.
 
@@ -82,4 +82,4 @@ Pflichtabschnitte, ohne die Teil 2 nicht fertig ist:
 - **Abschnitte ohne vorhandenen Inhalt sind Layout-Dekoration.** Unter „Inhalte" gehört pro Abschnitt der Vermerk, ob der Text vorliegt. Fehlt er, ist der Abschnitt zu streichen oder als offen zu markieren — nicht mit Lorem zu füllen.
 - **Teil 2 nicht vorziehen.** Ein Rahmen vor Phase 2 ist Bauchgefühl mit Überschrift.
 - **`status` mitführen:** `brief` → `directions` → `refining` → `decided` → `shipped`. Er steuert, was als Nächstes erlaubt ist; `chosenDirection` erst ab `decided`.
-- **`updated` bei jeder Änderung setzen.** Ein alter Brief mit neuem Inhalt ist unbrauchbar als Messlatte.
+- **`updatedAt` bei jeder Änderung setzen.** Ein alter Brief mit neuem Inhalt ist unbrauchbar als Messlatte.

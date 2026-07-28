@@ -1,0 +1,178 @@
+---
+import Lab from '../../layouts/Lab.astro';
+---
+
+<Lab
+  title="Projekt anlegen"
+  lead="Ein neues Projekt beginnt mit einem belastbaren Arbeitsauftrag. Die Daten bleiben lokal im Repository und werden erst danach zum Designlauf."
+>
+  <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.65fr)]">
+    <form id="project-form" class="border border-ink rounded-ds p-6" novalidate>
+      <div class="border-b border-line pb-5">
+        <p class="text-micro text-muted uppercase tracking-wide">Arbeitsauftrag</p>
+        <h2 class="font-head text-h2 mt-1">Womit soll der Lauf beginnen?</h2>
+        <p class="measure mt-3 text-muted">
+          Die fünf Angaben reichen für einen sauberen Start. Unklare Punkte bleiben bewusst offen,
+          statt sie durch eine KI erfinden zu lassen.
+        </p>
+      </div>
+
+      <div class="mt-6 grid gap-6">
+        <div>
+          <label for="title" class="font-head text-h3">Projektname</label>
+          <p id="title-hint" class="mt-1 text-micro text-muted">So erscheint der Lauf im Lab.</p>
+          <input id="title" name="title" required aria-describedby="title-hint" class="mt-2 w-full border border-control rounded-ds bg-surface px-3 py-2" autocomplete="off" />
+        </div>
+
+        <div>
+          <label for="slug" class="font-head text-h3">Projektkennung</label>
+          <p id="slug-hint" class="mt-1 text-micro text-muted">Kleinbuchstaben, Ziffern und Bindestriche, zum Beispiel <code>nordwerk-relaunch</code>.</p>
+          <input id="slug" name="slug" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" aria-describedby="slug-hint" class="mt-2 w-full border border-control rounded-ds bg-surface px-3 py-2 font-mono" autocomplete="off" />
+        </div>
+
+        <div class="grid gap-6 sm:grid-cols-2">
+          <div>
+            <label for="client" class="font-head text-h3">Organisation</label>
+            <input id="client" name="client" required class="mt-2 w-full border border-control rounded-ds bg-surface px-3 py-2" autocomplete="organization" />
+          </div>
+          <div>
+            <label for="primary-action" class="font-head text-h3">Primäre Aktion</label>
+            <input id="primary-action" name="primaryAction" required class="mt-2 w-full border border-control rounded-ds bg-surface px-3 py-2" placeholder="Zum Beispiel: Termin anfragen" />
+          </div>
+        </div>
+
+        <div>
+          <label for="goal" class="font-head text-h3">Ziel der Seite</label>
+          <textarea id="goal" name="goal" required rows="3" class="mt-2 w-full border border-control rounded-ds bg-surface px-3 py-2"></textarea>
+        </div>
+
+        <div>
+          <label for="audience" class="font-head text-h3">Zielgruppe und Situation</label>
+          <textarea id="audience" name="audience" required rows="3" class="mt-2 w-full border border-control rounded-ds bg-surface px-3 py-2"></textarea>
+        </div>
+      </div>
+
+      <div class="mt-8 flex flex-wrap items-center gap-4 border-t border-line pt-5">
+        <button type="submit" class="bg-accent px-4 py-2 text-accent-ink rounded-ds">
+          Projektdatei speichern
+        </button>
+        <p id="save-status" class="text-micro text-muted" role="status" aria-live="polite"></p>
+      </div>
+    </form>
+
+    <aside class="self-start">
+      <h2 class="font-head text-h2">So geht es weiter</h2>
+      <ol class="mt-4 divide-y divide-line border-y border-line">
+        <li class="py-4">
+          <p class="text-micro text-muted uppercase tracking-wide">Jetzt</p>
+          <h3 class="font-head text-h3 mt-1">Projektdatei anlegen</h3>
+          <p class="mt-2 text-muted">Sie landet unter <code>lab.config/projects/</code> und ist sofort versionierbar.</p>
+        </li>
+        <li class="py-4">
+          <p class="text-micro text-muted uppercase tracking-wide">Danach</p>
+          <h3 class="font-head text-h3 mt-1">Referenzen sammeln</h3>
+          <p class="mt-2 text-muted">15 bis 30 Beispiele machen die spätere Gestaltungsentscheidung belastbar.</p>
+        </li>
+        <li class="py-4">
+          <p class="text-micro text-muted uppercase tracking-wide">Erst dann</p>
+          <h3 class="font-head text-h3 mt-1">Richtungen bauen</h3>
+          <p class="mt-2 text-muted">Der Lauf unter <code>src/pages/lab/&lt;projekt&gt;/</code> entsteht erst nach dem Rahmen.</p>
+        </li>
+      </ol>
+
+      <p class="mt-6 text-micro text-muted">
+        Die Oberfläche speichert keine Zugangsdaten. KI-Prompts liegen versioniert unter <code>lab.config/prompts/</code>.
+      </p>
+    </aside>
+  </div>
+</Lab>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('#project-form');
+  const title = document.querySelector<HTMLInputElement>('#title');
+  const slug = document.querySelector<HTMLInputElement>('#slug');
+  const status = document.querySelector<HTMLElement>('#save-status');
+
+  const toSlug = (value: string) =>
+    value
+      .toLocaleLowerCase('de-DE')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+
+  title?.addEventListener('input', () => {
+    if (slug && !slug.dataset.edited) slug.value = toSlug(title.value);
+  });
+
+  slug?.addEventListener('input', () => {
+    if (slug) slug.dataset.edited = 'true';
+  });
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!form.reportValidity() || !slug || !status) return;
+
+    const values = new FormData(form);
+    const projectSlug = String(values.get('slug'));
+    const timestamp = new Date().toISOString();
+    const project = {
+      schemaVersion: 1,
+      slug: projectSlug,
+      title: String(values.get('title')),
+      client: String(values.get('client')),
+      goal: String(values.get('goal')),
+      primaryAction: String(values.get('primaryAction')),
+      audience: String(values.get('audience')),
+      status: 'brief',
+      createdAt: timestamp,
+      updatedAt: timestamp,
+      constraints: [],
+      briefing: {
+        product: '',
+        content: '',
+        technicalBasis: '',
+      },
+      designFrame: {
+        direction: '',
+        typography: '',
+        colors: '',
+        layout: '',
+        imagery: '',
+        motion: '',
+        signature: '',
+        exceptions: '',
+      },
+    };
+    const content = `${JSON.stringify(project, null, 2)}\n`;
+    const fileSystemWindow = window as typeof window & {
+      showDirectoryPicker?: (options: { mode: 'readwrite' }) => Promise<FileSystemDirectoryHandle>;
+    };
+
+    if (fileSystemWindow.showDirectoryPicker) {
+      try {
+        const root = await fileSystemWindow.showDirectoryPicker({ mode: 'readwrite' });
+        const config = await root.getDirectoryHandle('lab.config', { create: true });
+        const projects = await config.getDirectoryHandle('projects', { create: true });
+        const file = await projects.getFileHandle(`${projectSlug}.json`, { create: true });
+        const writer = await file.createWritable();
+        await writer.write(content);
+        await writer.close();
+        status.textContent = `Gespeichert: lab.config/projects/${projectSlug}.json. Seite neu laden.`;
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') {
+          status.textContent = 'Ordnerauswahl abgebrochen.';
+          return;
+        }
+      }
+    }
+
+    const download = document.createElement('a');
+    download.href = URL.createObjectURL(new Blob([content], { type: 'application/json' }));
+    download.download = `${projectSlug}.json`;
+    download.click();
+    URL.revokeObjectURL(download.href);
+    status.textContent = `Datei geladen. Nach lab.config/projects/${projectSlug}.json verschieben und Seite neu laden.`;
+  });
+</script>
