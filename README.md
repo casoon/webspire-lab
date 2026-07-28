@@ -13,6 +13,22 @@ pnpm install
 pnpm dev
 ```
 
+## Als Template starten
+
+Das Repository ist als GitHub-Template gedacht: **Use this template** wählen, das neue Repository
+klonen und darin arbeiten. Es gibt bewusst keinen Installer — ein neuer Lauf braucht zuerst ein
+inhaltliches Briefing, nicht einen weiteren Generator.
+
+1. `design/BRIEFING.template.md` nach `design/briefs/<projekt>.md` kopieren, `template: true`
+   entfernen und vollständig ausfüllen.
+2. Referenzen in `design/references/` erfassen; bei einer kopierten Vorlage ebenso `template: true`
+   entfernen.
+3. Erst dann `src/pages/lab/<projekt>/richtungen/` für die Vergleichsseiten anlegen.
+
+Das geklonte Lab startet leer. Die vollständige Nordwerk-Referenz liegt getrennt unter
+[`examples/nordwerk/`](examples/nordwerk/), wird nicht gebaut und erscheint nicht als aktiver
+Kundenlauf.
+
 | Route | Inhalt |
 |-------|--------|
 | `/` | Ablauf und Stand |
@@ -43,6 +59,7 @@ mit IDs, damit ein Befund zuordenbar ist statt „wirkt irgendwie KI-mäßig".
 pnpm test:a11y     # axe + Überschriftenstruktur + Fokus über alle Routen
 pnpm test:e2e      # zusätzlich die maschinell prüfbaren SLOP-Regeln
 pnpm test:shots    # Screenshots für den visuellen Vergleich
+pnpm analyze       # Fallow: ungenutzter Code, Duplikate, Komplexität
 ```
 
 Die Startseite sagt bei jedem Aufruf, welcher Schritt gerade dran ist und was ihn blockiert.

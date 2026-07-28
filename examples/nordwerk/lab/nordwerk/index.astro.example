@@ -3,7 +3,7 @@ import AxisBar from '../../../components/AxisBar.astro';
 import CompareGrid from '../../../components/CompareGrid.astro';
 import Lab from '../../../layouts/Lab.astro';
 
-const base = '/lab/beispiel-nordwerk/richtungen';
+const base = '/lab/nordwerk/richtungen';
 
 const directions = [
   {
@@ -60,9 +60,9 @@ const criteria = [
       Unterschiedlich sind Typografie, Raster, Farbwelt und Inhaltsdichte.
     </p>
     <p class="measure mt-3 text-muted">
-      Briefing und Gestaltungsrahmen liegen unter <code>design/briefs/beispiel-nordwerk.md</code>.
+      Briefing und Gestaltungsrahmen liegen unter <code>design/briefs/nordwerk.md</code>.
       Die Richtungen selbst liegen unter
-      <code>src/pages/lab/beispiel-nordwerk/richtungen/</code> und setzen ihre Tokens jeweils in
+      <code>src/pages/lab/nordwerk/richtungen/</code> und setzen ihre Tokens jeweils in
       einem eigenen <code>:root</code>-Block.
     </p>
   </section>

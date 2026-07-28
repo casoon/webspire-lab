@@ -33,7 +33,7 @@ const REFERENCE_TARGET = 15;
 const DIRECTION_TARGET = 5;
 const SUBVARIANT_TARGET = 3;
 
-export interface Step {
+interface Step {
   /** Phasennummer aus design/README.md */
   phase: number;
   title: string;
@@ -47,9 +47,9 @@ export interface Step {
   target?: string;
 }
 
-export type PhaseState = 'done' | 'current' | 'open';
+type PhaseState = 'done' | 'current' | 'open';
 
-export interface Phase {
+interface Phase {
   n: number;
   title: string;
   state: PhaseState;
@@ -72,11 +72,13 @@ function directionsOf(runSlug: string) {
 }
 
 export async function labState() {
-  const [references, briefs, catalog] = await Promise.all([
+  const [allReferences, allBriefs, catalog] = await Promise.all([
     getCollection('references'),
     getCollection('briefs'),
     getCollection('catalog', ({ data }) => !data.draft),
   ]);
+  const references = allReferences.filter((reference) => !reference.data.template);
+  const briefs = allBriefs.filter((brief) => !brief.data.template);
 
   const liveSites = references.filter((ref) => ref.data.sourceType === 'live-site').length;
   const coveredByReferences = new Set(references.flatMap((ref) => ref.data.covers));

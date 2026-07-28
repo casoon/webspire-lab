@@ -3,9 +3,9 @@ import { getCollection } from 'astro:content';
 import { CATALOG_FAMILY, DIRECTIONS } from '../../content.config';
 import Lab from '../../layouts/Lab.astro';
 
-const references = (await getCollection('references')).sort(
-  (a, b) => b.data.captured.valueOf() - a.data.captured.valueOf()
-);
+const references = (await getCollection('references'))
+  .filter((reference) => !reference.data.template)
+  .sort((a, b) => b.data.captured.valueOf() - a.data.captured.valueOf());
 
 const byDirection = DIRECTIONS.map((direction) => ({
   direction,

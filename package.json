@@ -20,6 +20,7 @@
     "test:a11y": "pnpm build && playwright test a11y",
     "test:shots": "pnpm build && playwright test screenshots",
     "test:e2e": "pnpm build && playwright test",
+    "analyze": "fallow",
     "clean": "rm -rf dist .astro"
   },
   "dependencies": {
@@ -32,6 +33,7 @@
     "@playwright/test": "^1.62.0",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^26.1.1",
+    "fallow": "^3.9.1",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3"
   }

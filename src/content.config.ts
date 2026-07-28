@@ -28,15 +28,9 @@ export const DIRECTIONS = [
   'brand-first',
 ] as const;
 
-export const TYPE_VOICE = [
-  'serif-display',
-  'sans-neutral',
-  'grotesk-bold',
-  'mono',
-  'mixed',
-] as const;
+const TYPE_VOICE = ['serif-display', 'sans-neutral', 'grotesk-bold', 'mono', 'mixed'] as const;
 
-export const LAYOUT_KIND = [
+const LAYOUT_KIND = [
   'grid-12',
   'asymmetric',
   'single-column',
@@ -45,7 +39,7 @@ export const LAYOUT_KIND = [
   'canvas',
 ] as const;
 
-export const SURFACE_KIND = ['flat', 'bordered', 'cards', 'layered', 'full-bleed'] as const;
+const SURFACE_KIND = ['flat', 'bordered', 'cards', 'layered', 'full-bleed'] as const;
 
 export const CATALOG_FAMILY = [
   'hero',
@@ -64,7 +58,7 @@ export const CATALOG_FAMILY = [
 
 /** Neutralstellung aller sechs Achsen. Ein Katalogbaustein, der hiervon abweicht,
  *  braucht dafür einen Grund im entry.md. */
-export const DEFAULT_AXES = {
+const DEFAULT_AXES = {
   heading: 'sans',
   width: 'normal',
   density: 'balanced',
@@ -83,9 +77,10 @@ const axes = z.object({
 });
 
 const references = defineCollection({
-  // Unterstrich-Dateien sind Vorlagen, keine Einträge.
-  loader: glob({ pattern: '**/[!_]*.md', base: './design/references' }),
+  loader: glob({ pattern: '**/*.md', base: './design/references' }),
   schema: z.object({
+    /** Mitgelieferte Vorlage: validieren, aber nirgends als Referenz anzeigen. */
+    template: z.boolean().default(false),
     title: z.string().min(1),
     /** Reale Website schlägt Dribbble-Shot. Siehe design/README.md, Phase 2. */
     sourceType: z.enum(['live-site', 'shot', 'print', 'app', 'other']),
@@ -105,8 +100,13 @@ const references = defineCollection({
 });
 
 const briefs = defineCollection({
-  loader: glob({ pattern: '**/[!_]*.md', base: './design/briefs' }),
+  loader: glob({
+    pattern: '{briefs/**/*.md,BRIEFING.template.md}',
+    base: './design',
+  }),
   schema: z.object({
+    /** Mitgelieferte Vorlage: validieren, aber nirgends als Briefing anzeigen. */
+    template: z.boolean().default(false),
     title: z.string().min(1),
     client: z.string().min(1),
     goal: z.string().min(10),

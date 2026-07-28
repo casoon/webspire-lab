@@ -103,7 +103,7 @@ Vergleich sichtbar wird, ob sie überhaupt etwas beiträgt. Scroll-Effekte sind 
 | `02-aufmass` | Dunkler Grund, sehr große Grotesk, einspaltig und luftig |
 | `03-bestand` | Gedecktes Salbeigrün, Serifen-Überschriften, asymmetrischer Split |
 
-Vergleich unter `/lab/beispiel-nordwerk/`.
+Vergleich unter `/lab/nordwerk/`.
 
 > Dieser Lauf ist die Referenz-Implementierung für die Struktur eines Lab-Laufs und zeigt
 > deshalb nur drei Richtungen. Phase 4 verlangt fünf. Wer hier abschaut, schaut die

@@ -13,7 +13,7 @@ const runSlugs = Object.keys(runPages)
   .map((path) => path.replace('/src/pages/lab/', '').replace('/index.astro', ''))
   .sort();
 
-const briefs = await getCollection('briefs');
+const briefs = (await getCollection('briefs')).filter((brief) => !brief.data.template);
 const briefBySlug = new Map(briefs.map((brief) => [brief.id, brief]));
 
 const statusLabel: Record<string, string> = {

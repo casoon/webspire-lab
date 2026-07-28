@@ -1,9 +1,10 @@
 ---
-title: ''
-client: ''
-goal: ''
-primaryAction: ''
-audience: ''
+template: true
+title: 'Vorlage — vor dem Start ersetzen'
+client: 'Vorlage'
+goal: 'Dieses Briefing vor dem ersten Designlauf vollständig ersetzen.'
+primaryAction: 'Briefing ausfüllen'
+audience: 'Projektteam mit einem konkreten Gestaltungsauftrag.'
 status: brief
 updated: 2026-01-01
 constraints: []

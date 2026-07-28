@@ -1,10 +1,10 @@
 ---
-# Vorlage. Unterstrich-Dateien werden nicht in die Bibliothek geladen.
-# Kopieren nach design/references/<kurzer-slug>.md
-title: ''
+# Vorlage. Wird technisch validiert, aber nirgends als Referenz angezeigt.
+# Kopieren nach design/references/<kurzer-slug>.md und template entfernen.
+template: true
+title: 'Vorlage für eine Referenz'
 # live-site schlägt shot. Präsentationsdesigns kennen keine Fehlerzustände.
 sourceType: live-site
-url: ''
 captured: 2026-01-01
 # Mehrfachnennung erlaubt, aber nicht mehr als zwei.
 # editorial | corporate | premium | bold-branding | minimal | tech
@@ -19,9 +19,8 @@ layout: asymmetric
 surface: flat
 # Welche Eigenschaft übernommen werden soll. Nicht "sieht gut aus",
 # nicht "diese Seite nachbauen". Mindestens 20 Zeichen.
-takeaway: ''
+takeaway: 'Vorlage, vor dem Erfassen vollständig ersetzen.'
 # Dateiname in design/references/screenshots/
-screenshot: ''
 # Welche Screen-Typen zeigt die Referenz? Nur Heros zu sammeln macht die
 # Bibliothek wertlos — Formulare, Tabellen und Fehlerzustände sind wichtiger.
 covers:

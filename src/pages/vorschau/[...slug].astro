@@ -1,7 +1,7 @@
 ---
-import { getCollection } from 'astro:content';
 import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 import Bare from '../../layouts/Bare.astro';
+import { catalogStaticPaths } from '../../lib/catalog';
 
 // Glob-Muster muss ein Literal sein — keine Variablen, keine Template-Strings.
 // Absolute Form ab Projekt-Root, damit die Keys nicht an der Dateitiefe hängen.
@@ -13,8 +13,7 @@ const previews = import.meta.glob<{ default: AstroComponentFactory }>(
 );
 
 export async function getStaticPaths() {
-  const entries = await getCollection('catalog', ({ data }) => !data.draft);
-  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+  return catalogStaticPaths();
 }
 
 const { entry } = Astro.props;
