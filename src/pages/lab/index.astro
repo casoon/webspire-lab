@@ -53,9 +53,16 @@ const briefsWithoutRun = briefs.filter((brief) => !runSlugs.includes(brief.slug)
                   {brief.client} · {statusLabel[brief.status] ?? brief.status}
                 </p>
                 <p class="measure mt-3 text-muted">{brief.goal}</p>
-                <p class="mt-3 text-micro text-muted">
-                  Primäre Aktion: <span class="text-ink">{brief.primaryAction}</span>
-                </p>
+                {brief.ctas.primary && (
+                  <p class="mt-3 text-micro text-muted">
+                    Haupt-CTA: <span class="text-ink">{brief.ctas.primary}</span>
+                  </p>
+                )}
+                {brief.ctas.secondary.length > 0 && (
+                  <p class="mt-1 text-micro text-muted">
+                    Sekundär: <span class="text-ink">{brief.ctas.secondary.join(' · ')}</span>
+                  </p>
+                )}
                 {brief.chosenDirection && (
                   <p class="mt-1 text-micro text-muted">
                     Gewählt: <span class="text-ink">{brief.chosenDirection}</span>

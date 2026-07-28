@@ -55,7 +55,7 @@ Wie ein geklontes Lab spätere Verbesserungen dieses Templates übernimmt, steht
 
 Acht Phasen, beschrieben in [`design/README.md`](design/README.md). Kurz:
 
-1. Briefing — ein Ziel, eine primäre Aktion
+1. Briefing — ein Ziel, optionale CTAs
 2. 15–30 Referenzen sammeln, verschlagwortet nach Merkmal
 3. Gestaltungsrahmen ableiten
 4. Fünf Richtungen bauen, gleicher Inhalt, gemeinsame Vergleichsseite

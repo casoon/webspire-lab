@@ -10,7 +10,7 @@ Untervarianten davon — statt einem Entwurf, der allein betrachtet überzeugt.
 
 ## Gotcha zuerst
 
-Alle Varianten zeigen **denselben Inhalt** und **dieselbe primäre Aktion**. Wer nebenbei die Texte
+Alle Varianten zeigen **denselben Inhalt** und **dieselben CTAs**. Wer nebenbei die Texte
 ändert, vergleicht Texte statt Design und trifft die Entscheidung auf falscher Grundlage. Die
 Variante mit dem schärferen Hero-Satz gewinnt jedes Mal, egal wie sie gestaltet ist. Copy einmal
 aus dem Brief ziehen und in allen fünf Richtungen wortgleich einsetzen.
@@ -93,7 +93,7 @@ liegen — sie sind die Begründung der Entscheidung.
 
 `Lab.astro`, darin `AxisBar`, darunter `CompareGrid`. Jedes Item bekommt einen `note`-Satz, der
 sagt, **worin** sich diese Variante von den anderen unterscheidet, nicht was sie schön macht.
-Darunter die Bewertungskriterien aus dem Brief (Ziel, primäre Aktion, Zielgruppe, „was es nicht
+Darunter die Bewertungskriterien aus dem Brief (Ziel, CTAs, Zielgruppe, „was es nicht
 werden soll").
 
 ## Nach dem Bauen

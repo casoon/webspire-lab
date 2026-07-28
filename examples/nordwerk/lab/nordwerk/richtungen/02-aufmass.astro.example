@@ -5,7 +5,7 @@ import Bare from '../../../../layouts/Bare.astro';
  * Richtung 02: Aufmaß.
  *
  * Dunkler Grund, sehr große Grotesk, eine Spalte, kein einziger Rahmen um
- * Inhalt. Die Seite hat pro Bildschirm genau eine Sache zu sagen, die primäre
+ * Inhalt. Die Seite hat pro Bildschirm genau eine Sache zu sagen, die Haupt-
  * Aktion steht deshalb allein. Gegenprobe zur dichten Richtung 01.
  *
  * Konvention: die Richtung überschreibt Schicht-1-Tokens in :root. Neue

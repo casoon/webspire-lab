@@ -8,7 +8,10 @@ export interface Project {
   title: string;
   client: string;
   goal: string;
-  primaryAction: string;
+  ctas: {
+    primary: string;
+    secondary: string[];
+  };
   audience: string;
   status: ProjectStatus;
   createdAt: string;
@@ -36,18 +39,17 @@ const projectFiles = import.meta.glob<{ default: unknown }>('/lab.config/project
   eager: true,
 });
 
-function isProject(value: unknown): value is Project {
-  if (!value || typeof value !== 'object') return false;
+function toProject(value: unknown): Project | null {
+  if (!value || typeof value !== 'object') return null;
   const project = value as Record<string, unknown>;
 
-  return (
+  if (
     project.schemaVersion === 1 &&
     hasStringFields(project, [
       'slug',
       'title',
       'client',
       'goal',
-      'primaryAction',
       'audience',
       'createdAt',
       'updatedAt',
@@ -67,7 +69,12 @@ function isProject(value: unknown): value is Project {
       'signature',
       'exceptions',
     ])
-  );
+  ) {
+    const ctas = ctasOf(project);
+    return ctas ? { ...(project as Omit<Project, 'ctas'>), ctas } : null;
+  }
+
+  return null;
 }
 
 function hasStringFields(value: unknown, fields: string[]) {
@@ -75,10 +82,31 @@ function hasStringFields(value: unknown, fields: string[]) {
   return fields.every((field) => typeof (value as Record<string, unknown>)[field] === 'string');
 }
 
+function ctasOf(project: Record<string, unknown>): Project['ctas'] | null {
+  const ctas = project.ctas;
+  if (ctas && typeof ctas === 'object') {
+    const value = ctas as Record<string, unknown>;
+    if (
+      typeof value.primary === 'string' &&
+      Array.isArray(value.secondary) &&
+      value.secondary.length <= 2 &&
+      value.secondary.every((cta) => typeof cta === 'string')
+    ) {
+      return { primary: value.primary, secondary: value.secondary };
+    }
+    return null;
+  }
+
+  return typeof project.primaryAction === 'string'
+    ? { primary: project.primaryAction, secondary: [] }
+    : { primary: '', secondary: [] };
+}
+
 /** Projektdateien sind klein, bewusst lesbar und werden über Git versioniert. */
 export function getProjects(): Project[] {
   return Object.values(projectFiles)
     .map((module) => module.default)
-    .filter(isProject)
+    .map(toProject)
+    .filter((project): project is Project => project !== null)
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt) || a.slug.localeCompare(b.slug));
 }

@@ -15,7 +15,7 @@ Niemals raten — fehlt eine dieser Angaben, wird gefragt und die Arbeit pausier
 | Feld | Warum nicht ableitbar |
 |------|-----------------------|
 | Ziel der Seite | Nur der Auftraggeber weiß, wofür die Seite gebaut wird |
-| Primäre Aktion | Aus dem Produkt folgt keine Aktion. Zwei Kandidaten = Rückfrage, nicht Kompromiss |
+| CTAs | Aus dem Produkt folgt keine Handlung. Haupt- und sekundäre CTAs nur übernehmen, wenn sie belegt sind |
 | Zielgruppe samt Vorwissen und Skepsis | Die häufigste Halluzination. „KMU-Entscheider" ist keine Zielgruppe |
 | Inhalte-Verfügbarkeit | Ob ein Abschnitt Text hat, ist eine Tatsache, keine Annahme |
 
@@ -40,7 +40,10 @@ bricht die inhaltliche Prüfung.
   "title": "Relaunch Startseite",
   "client": "Beispiel GmbH",
   "goal": "Erstkontakt zu …",
-  "primaryAction": "Termin buchen",
+  "ctas": {
+    "primary": "Termin buchen",
+    "secondary": ["Leistungen ansehen"]
+  },
   "audience": "Bauleiter, die …",
   "status": "brief",
   "updatedAt": "2026-07-28T12:00:00.000Z",
@@ -78,7 +81,7 @@ Pflichtabschnitte, ohne die Teil 2 nicht fertig ist:
 
 ## Gotchas
 
-- **Ein Ziel pro Seite.** Zwei gleichrangige Ziele sind der häufigste Grund, warum ein Entwurf später beliebig wirkt. Ebenso genau eine primäre Aktion (`JUDGE-CTA-TIERS`).
+- **Ein Ziel pro Seite.** Zwei gleichrangige Ziele sind der häufigste Grund, warum ein Entwurf später beliebig wirkt. CTAs sind optional; falls vorhanden, gibt es genau eine Haupt-CTA und höchstens zwei sekundäre (`JUDGE-CTA-TIERS`).
 - **Abschnitte ohne vorhandenen Inhalt sind Layout-Dekoration.** Unter „Inhalte" gehört pro Abschnitt der Vermerk, ob der Text vorliegt. Fehlt er, ist der Abschnitt zu streichen oder als offen zu markieren — nicht mit Lorem zu füllen.
 - **Teil 2 nicht vorziehen.** Ein Rahmen vor Phase 2 ist Bauchgefühl mit Überschrift.
 - **`status` mitführen:** `brief` → `directions` → `refining` → `decided` → `shipped`. Er steuert, was als Nächstes erlaubt ist; `chosenDirection` erst ab `decided`.

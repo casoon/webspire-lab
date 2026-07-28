@@ -3,7 +3,9 @@ template: true
 title: 'Vorlage — vor dem Start ersetzen'
 client: 'Vorlage'
 goal: 'Dieses Briefing vor dem ersten Designlauf vollständig ersetzen.'
-primaryAction: 'Briefing ausfüllen'
+ctas:
+  primary: ''
+  secondary: []
 audience: 'Projektteam mit einem konkreten Gestaltungsauftrag.'
 status: brief
 updated: 2026-01-01
@@ -23,9 +25,10 @@ Keine Selbstbeschreibung aus der Bestandswebsite übernehmen.
 
 Ein Ziel. Nicht drei.
 
-## Primäre Aktion
+## CTAs (optional)
 
-Was soll die Besucherin tun. Genau eine Aktion, wörtlich formuliert.
+Wenn die Seite Handlungen anbietet: höchstens eine Haupt-CTA und bis zu zwei sekundäre CTAs,
+jeweils wörtlich formuliert. Keine CTA ist ebenfalls eine gültige Entscheidung.
 
 ## Zielgruppe
 

@@ -2,7 +2,10 @@
 title: 'Nordwerk Fensterbau'
 client: 'Nordwerk Fensterbau GmbH'
 goal: 'Qualifizierte Anfragen für ein Vor-Ort-Aufmaß im Altbau erzeugen, statt allgemeine Kontaktanfragen einzusammeln.'
-primaryAction: 'Aufmaß-Termin anfragen'
+ctas:
+  primary: 'Aufmaß-Termin anfragen'
+  secondary:
+    - 'Werkstatt anrufen'
 audience: 'Altbaubesitzer zwischen 45 und 70 Jahren im Nordwesten sowie Hausverwaltungen mit Mehrfamilienhäusern aus der Zeit vor 1940.'
 status: 'directions'
 updated: 2026-07-27
@@ -25,8 +28,8 @@ und Kunststoff macht der Betrieb nicht.
 Anfragende weiß vorher, dass ein Termin 45 bis 90 Minuten dauert, dass Holz aufgestochen wird
 und dass das Angebot je Fenster kalkuliert wird. Wer das nicht will, soll nicht anfragen.
 
-**Primäre Aktion.** Aufmaß-Termin anfragen. Sekundär der Rückruf über die Werkstattnummer,
-weil ein Teil der Zielgruppe lieber telefoniert als Formulare ausfüllt.
+**CTAs.** Haupt-CTA: Aufmaß-Termin anfragen. Sekundäre CTA: Werkstatt anrufen, weil ein Teil
+der Zielgruppe lieber telefoniert als Formulare ausfüllt.
 
 **Zielgruppe.**
 
@@ -44,7 +47,7 @@ Nordwerk liegt im Verfahren, nicht in der Behauptung. Das gehört in die Gestalt
 Adjektive.
 
 **Inhaltlicher Kern für den Vergleich.** Alle Richtungen zeigen denselben Ausschnitt: Hero mit
-Überschrift, Einordnung, primärer und sekundärer Aktion, dazu einen Inhaltsabschnitt zum Ablauf
+Überschrift, Einordnung, Haupt- und sekundärer CTA, dazu einen Inhaltsabschnitt zum Ablauf
 des Aufmaßes mit vier Schritten und eine Fußzeile. Mehr nicht. Was sich unterscheidet, ist
 ausschließlich die Gestaltung.
 
@@ -69,7 +72,7 @@ Keine Schriftmischung, die man erklären muss.
 
 Der Hintergrund ist nie cremefarben und nie beige. Zulässig sind kühle Neutraltöne
 (Farbton 200 bis 260), gedeckte Grünwerte (Farbton 140 bis 170) und ein dunkler Grund als
-eigenständige Variante. Der Akzent trägt genau eine Aufgabe: die primäre Aktion. Farbige
+eigenständige Variante. Der Akzent trägt genau eine Aufgabe: die Haupt-CTA. Farbige
 Randstreifen als Dekoration sind ausgeschlossen. Die Akzentfläche bleibt unter zehn Prozent.
 
 ### Layout

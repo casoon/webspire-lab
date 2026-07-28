@@ -44,7 +44,7 @@ pnpm test:shots     Screenshots für den visuellen Vergleich
 - **Katalogbausteine sind richtungsneutral.** Ein Baustein, der eigene Farben oder Radien setzt,
   gehört nicht in den Katalog.
 - **Varianten unterscheiden sich strukturell**, nicht nur farblich, und zeigen denselben Inhalt
-  und dieselbe primäre Aktion.
+  und dieselben CTAs.
 - **Bildflächen bleiben beschriftete Platzhalter.** Keine externen Bild-URLs, kein picsum,
   keine Stockfotos.
 - **Deutsch** in Doku, Kommentaren und Copy. Code und Tokennamen englisch.

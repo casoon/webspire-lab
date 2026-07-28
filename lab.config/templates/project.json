@@ -4,7 +4,10 @@
   "title": "Titel des Projekts",
   "client": "Organisation oder Kunde",
   "goal": "Ein konkretes Ziel der Seite.",
-  "primaryAction": "Eine primäre Aktion",
+  "ctas": {
+    "primary": "",
+    "secondary": []
+  },
   "audience": "Zielgruppe mit Vorwissen und Situation.",
   "status": "brief",
   "createdAt": "2026-07-28T00:00:00.000Z",

@@ -98,7 +98,7 @@ sich, oder die Regel wird bewusst und begründet im Brief ausgenommen.
 | `JUDGE-STRIPES` | Keine handgezeichneten Doodle-SVGs, keine Crosshair- oder Haarlinien-Gitter als Dekoration. Verlaufsflächen prüft `SLOP-DECOR-GRADIENT`. |
 | `JUDGE-MOTION-PURPOSE` | Keine Animation ohne Funktion. Bewegung zeigt Zustandswechsel, Herkunft oder Zusammenhang — sonst weglassen. Zusätzliche Animation ist selbst ein Slop-Signal. |
 | `JUDGE-MOTION-LIMITS` | Translate 4–12px, Hover-Scale max 1.05, Rotation max 3deg, Exits schneller als Entrances. `transition: all`, animierte Layout-Eigenschaften, Endlos-Animationen und Überschwingen prüfen `SLOP-TRANSITION-ALL`, `SLOP-ANIMATE-LAYOUT`, `SLOP-INFINITE-MOTION`, `SLOP-BOUNCE-EASING`. |
-| `JUDGE-CTA-TIERS` | Nie zwei primäre CTAs in einer Ansicht. Primary / Secondary / Ghost sauber getrennt. |
+| `JUDGE-CTA-TIERS` | CTAs sind optional. Falls vorhanden: höchstens eine Haupt-CTA und zwei sekundäre CTAs pro Ansicht; Primary / Secondary / Ghost sauber getrennt. |
 | `JUDGE-RADIUS-NESTING` | Verschachtelte Karten sind fast immer falsch — auch wenn die Radien stimmen. Die Radien selbst prüft `SLOP-NESTED-SURFACE`. |
 | `JUDGE-ACCENT-AREA` | Akzentfarbe nicht über 10 % der Fläche. Die Achse `accent` regelt Sättigung, nicht Fläche. |
 | `JUDGE-STOCK` | Keine generischen Stockfotos, keine 3D-Kugeln, Glasobjekte oder schwebenden Dashboards. Im Lab bleiben Bildflächen beschriftete Platzhalter. |

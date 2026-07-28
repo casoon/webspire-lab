@@ -142,7 +142,7 @@ export async function labState() {
       return {
         phase: 1,
         title: 'Briefing zuordnen',
-        action: `Briefing für ${slug} anlegen: ein Ziel, eine primäre Aktion, echte Zielgruppe.`,
+        action: `Briefing für ${slug} anlegen: ein Ziel, passende CTAs und eine echte Zielgruppe.`,
         why: 'Ohne Briefing ist der vorhandene Vergleich nicht bewertbar.',
         command: '/design-brief',
         target: `lab.config/projects/${slug}.json`,
@@ -179,7 +179,7 @@ export async function labState() {
       return {
         phase: 4,
         title: 'Richtungen bauen',
-        action: `Noch ${fehlen} Richtung${fehlen === 1 ? '' : 'en'} für ${slug} bauen, alle mit demselben Inhalt und derselben primären Aktion.`,
+        action: `Noch ${fehlen} Richtung${fehlen === 1 ? '' : 'en'} für ${slug} bauen, alle mit demselben Inhalt und denselben CTAs.`,
         why: 'Fünf Richtungen nebeneinander. Einzeln wirkt fast jeder Entwurf überzeugend.',
         command: '/design-directions-lab',
         target: `src/pages/lab/${slug}/richtungen/`,

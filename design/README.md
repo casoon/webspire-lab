@@ -30,8 +30,8 @@ diesem Repo kommen.
 Ohne Briefing ist jede Bewertung Geschmackssache. Ein neues Projekt wird lokal unter `/start/`
 angelegt; Vorlage und Schema liegen in `lab.config/templates/project.json`.
 
-Pflichtangaben: Produkt, Ziel der Seite, **eine** primäre Aktion, Zielgruppe samt Vorwissen,
-Inhalte, technische Basis, Randbedingungen.
+Pflichtangaben: Produkt, Ziel der Seite, Zielgruppe samt Vorwissen, Inhalte, technische Basis,
+Randbedingungen. CTAs sind optional: höchstens eine Haupt-CTA und zwei sekundäre CTAs.
 
 Ein Ziel pro Seite. Zwei gleichrangige Ziele sind der häufigste Grund, warum ein Entwurf
 später beliebig wirkt.
@@ -69,7 +69,7 @@ Noch keine Produktionsseite. Pro Richtung nur Hero plus einen exemplarischen Inh
 
 Bindend:
 
-- Alle Varianten zeigen **denselben Inhalt** und **dieselbe primäre Aktion**. Verändert wird
+- Alle Varianten zeigen **denselben Inhalt** und **dieselben CTAs**. Verändert wird
   ausschließlich die Gestaltung. Sonst vergleicht man Texte statt Design.
 - Die fünf müssen sich in Typografie, Raster, Farbwelt und Inhaltsdichte unterscheiden —
   nicht fünf Spielarten desselben Layouts.
@@ -85,7 +85,7 @@ Nach der Auswahl **keine** fünf neuen Designs. Stattdessen drei Untervarianten,
 Achse verändern.
 
 Bleibt gleich: Farbwelt, Grundtypografie, Bildsprache, Markencharakter.
-Variiert wird: Aufbau des Inhaltsbereichs, Position des primären CTA, Abschnittsrhythmus,
+Variiert wird: Aufbau des Inhaltsbereichs, Position der Haupt-CTA, Abschnittsrhythmus,
 Verhältnis von Bild zu Text, Raster.
 
 ## Phase 6 — Bausteine und Assets
